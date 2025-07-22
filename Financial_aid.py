@@ -1,3 +1,30 @@
+import mysql.connector
+
+# Connect to the MySQL database
+conn = mysql.connector.connect(
+    host="mysql-3b2c714f-alustudent-809e.f.aivencloud.com",
+    port=11687,
+    user="avnadmin",
+    password="AVNS_eT5JtHKtU3AQ9fsEevK",
+    database="defaultdb",
+    ssl_disabled=False
+)
+cursor = conn.cursor()
+
+# Create the AidPrograms table
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS AidPrograms (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    eligibility_criteria TEXT,
+    available_funds DECIMAL(10,2),
+    target_locality VARCHAR(255)
+)
+""")
+conn.commit()
+
+#Add aid_program
 def add_aid_program():
     name = input("Enter aid program name: ")
     aid_type = input("Enter type of aid (e.g., scholarship, fee waiver): ")
@@ -26,7 +53,7 @@ def add_aid_program():
     cursor.execute("""
         INSERT INTO AidPrograms (name, type, eligibility_criteria, available_funds, target_locality)
         VALUES (?, ?, ?, ?, ?)
-    """, (name, aid_type, eligibility, funds, locality))
+    """,(name, aid_type, eligibility, funds, locality))
 
     conn.commit()
     print(" Aid program added successfully.\n")
