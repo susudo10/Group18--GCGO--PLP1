@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from db_connection import create_connection
 
 

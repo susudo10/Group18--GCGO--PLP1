@@ -62,4 +62,15 @@ class StudentManager:
             print(row)
 
     @property
+    def update_student(self, student_id):
+        """This defines the property to update student details on thier profile."""
+        updates = []
+        values = []
 
+        # Still needs to be finished off ❌!!!
+
+    @property delete_student(self, student_id):
+        query = "DELETE FROM students WHERE id = %s"
+        self.cursor.execute(query, (student_id,))
+        self.connection.commit()
+        print("Student deleted successfully.")

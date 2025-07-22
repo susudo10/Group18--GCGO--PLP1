@@ -20,7 +20,31 @@ class Student:
         self.region = region
 
     @property
+    def financial_status(self):
+        if self.income_level < 50000 and self.dependents >= 3:
+        return "High Need"
+    elif self.income_level < 100000:
+        return "Moderate Need"
+    else:
+        return "Low Need"
+
+    @property
     def eligible_for_aid(self):
         """Gets the income level and number of dependents.
         If the income_level is less than 100 or dependents are >= 3."""
         return self.income_level < 100 or self.dependents >=3
+
+    @property
+    def update_info(self, name=None, contact=None, locality=None, income_level=None, dependents=None):
+        """This allows for updates to the student's attributes.
+        This is through using optional arguments allowing for updates on chosen fields only."""
+        if name is not None:
+            self.name = name
+        if contact is not None:
+            self.contact = contact
+        if locality is not None:
+            self.locality = locality
+        if income_level is not None:
+            self.income_level = income_level
+        if dependents is not None:
+            self.dependents = dependents
