@@ -9,6 +9,7 @@ def add_student():
 
     name = input("Enter student name: ")
     school = input("Enter school name: ")
+    contact = input("Enter your contact")
     dob = input("Enter your date of birth in this format DD-MM-YYY")
     income = float(input("Enter household income: "))
     dependants = int(input("Enter number of dependents: "))
@@ -18,7 +19,7 @@ def add_student():
     # This is inserting the input from the user into the database
     cursor.execute(
         "INSERT INTO students (name, contact, income, dob, dependents, region) VALUES (%s, %s, %s, %s, %s, %s)",
-        (name, contact, income, dob, dependants, region)
+        (name, contact, school, income, dob, dependants, region)
     )
 
     # Committing the insertion
