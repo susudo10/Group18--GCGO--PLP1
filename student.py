@@ -49,3 +49,16 @@ class Student:
             self.income = income
         if dependents is not None:
             self.dependents = dependents
+
+def prompt_student_info():
+    name = input("Enter student name: ")
+    contact = input("Enter contact number: ")
+    dob = input("Enter date of birth (YYYY-MM-DD): ")
+    school = input("Enter the name of your school: ")
+    income = float(input("Enter income level: "))
+    dependents = int(input("Enter number of dependents: "))
+    region = input("Enter region: ")
+    school = input("Enter school name: ")
+
+    # student_id can be None or assigned later
+    return Student(None, name, contact, school, dob, income, dependents, region, school)

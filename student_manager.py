@@ -29,13 +29,22 @@ class StudentManager:
 
 
     # Method to add a student
-    def add_Student(self, student: Student):
+    def add_student(self, student: Student):
+        """Adds a new student to the database."""
         self.cursor.execute(
             """
             INSERT INTO students (name, contact, school, income, dob, dependents, region) 
             VALUES (%s, %s, %s, %s, %s, %s, %s),
             """,
-            (student.name, student.contact, student.school, student.income, student.dob, student.dependents, student.region)
+            (
+                student.name,
+                student.contact,
+                student.school,
+                student.income,
+                student.dob,
+                student.dependents,
+                student.region
+            )
         )
         self.connection.commit()
         print(f"Student '{student.name}' added successfully.✅")
@@ -65,25 +74,35 @@ class StudentManager:
             print(row)
 
     # Method to update the student profile details
-    def update_student(self, student_id, update_data):
-        """This defines the property to update student details on their profile."""
-        updates = []
-        values = []
+    def update_student(self, student_id, updates : dict):
+        """
+        This defines the property to update student details in updates dict.
+        
+        Args:
+        student_id(INT): The ID of the student to update.
+        updates (dict): A dictionary of field names and their new values.
+                        e.g, {'name': 'Jane Doe', 'income': 30000}
+        """
+        if not updates:
+            print("No updates provided.")
+            return 
+        
+        # Creating a SET clause which is dynamic through Looking over dictionary of fields which can be updated
+        set_clause = ", ".join([f"{field} = %s" for field in updates.keys()])
+        values = list(updates.values())
+        values.append(student_id)
 
-        # Look over dictionary of fields which can be updated
-        for key, value in update_data.items():
-            updates.append(f"{key} = %s") #e.g "contact = %s"
-            values.append(value)          #e.g 0779234567
-
-        values.append(student_id) # This is the student we're updating for
 
         #Join the update strings into one SQL statement
-        query = f"UPDATE students SET {', '.join(updates)} WHERE id = %s"
+        query = f"UPDATE students SET {set_clause} WHERE id = %s"
 
         # Executing the query and committing the updates
-        self.cursor.excute(query, values)
-        self.connection.commit()
-        print(f"Student {student_id} updated successfully.")
+        try:
+            self.cursor.excute(query, values)
+            self.connection.commit()
+            print(f"Student {student_id} updated successfully.")
+        except Exception as e:
+            print(f"Error updating student: {e}")
 
     # Method to delete the student record
     def delete_student(self, student_id):
