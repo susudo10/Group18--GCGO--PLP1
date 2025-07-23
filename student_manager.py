@@ -10,6 +10,7 @@ import mysql.connector
 from student import Student # Assuming student class is in student.py
 import os
 from dotenv import load_dotenv
+from db_connection import create_connection, create_tables
 
 load_dotenv() #Loading the .env variables into the script
 
@@ -18,13 +19,14 @@ class StudentManager:
     """ Defines the class Student."""
     def __init__(self):
         """ This connects to the aiven databse."""
-        self.connection = mysql.connector.connect(
-            host=os.getenv("DB_HOST"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
-            database=os.getenv("DB_NAME"),
-            port=os.getenv("DB_PORT")
-        )
+        # self.connection = mysql.connector.connect(
+        #     host=os.getenv("DB_HOST"),
+        #     user=os.getenv("DB_USER"),
+        #     password=os.getenv("DB_PASSWORD"),
+        #     database=os.getenv("DB_NAME"),
+        #     port=os.getenv("DB_PORT")
+        # )
+        self.connection = create_connection()
         self.cursor = self.connection.cursor()
 
 
