@@ -1,3 +1,16 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+import mysql.connector
+import os
+
+conn = mysql.connector.connect(
+    host=os.getenv("DB_HOST"),
+    port=int(os.getenv("DB_PORT")),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD")
+)
 def add_aid_program():
     name = input("Enter aid program name: ")
     aid_type = input("Enter type of aid (e.g., scholarship, fee waiver): ")
