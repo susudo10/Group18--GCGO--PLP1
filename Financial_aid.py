@@ -1,9 +1,9 @@
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
+import mysql.connector
 
 load_dotenv()
-import mysql.connector
-import os
+
 
 conn = mysql.connector.connect(
     host=os.getenv("DB_HOST"),
