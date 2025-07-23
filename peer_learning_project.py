@@ -1,12 +1,13 @@
 import sqlite3
 from datetime import datetime
+from db_connection import create_connection
 
 DB_FILE = "san.db"
 
 def get_db_connection():
     """Open an existing database connection."""
-    conn = sqlite3.connect(DB_FILE)
-    conn.row_factory = sqlite3.Row
+    conn = create_connection()
+    # conn.row_factory = sqlite3.Row
     return conn
 
 
