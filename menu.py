@@ -107,8 +107,7 @@ def demo_navigation():
                     break
                 else:
                     print(f"You selected aid program option {aid_choice}")
-                    input("Press Enter to continue...")
-                    
+                    input("Press Enter to continue...")              
         elif choice == 3:
             print("Reports & Analytics - Feature coming soon!")
             input("Press Enter to continue...")
