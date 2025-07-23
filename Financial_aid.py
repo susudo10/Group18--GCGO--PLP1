@@ -9,7 +9,7 @@ conn = mysql.connector.connect(
     port=int(os.getenv("DB_PORT")),
     user=os.getenv("DB_USER"),
     password=os.getenv("DB_PASSWORD"),
-    database=os.getenv("DB_NAME")  # Optional if you're also loading DB_NAME
+    database=os.getenv("DB_NAME")
 )
 
 def add_aid_program():
