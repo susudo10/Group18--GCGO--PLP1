@@ -5,18 +5,18 @@ to add, view, update and delete students.
 It is basically the controller that manages the collection student objects and links to the database.
 """
 
-"""First importing the sql database and the class student."""
+# First importing the sql database and the class student.
 import mysql.connector
 from student import Student # Assuming student class is in student.py
 import os
 from dotenv import load_dotenv
 
-load_dotenv
+load_dotenv() #Loading the .env variables into the script
 
 
 class StudentManager:
     """ Defines the class Student."""
-    def __init__(self, connection, cursor):
+    def __init__(self):
         """ This connects to the aiven databse."""
         self.connection = mysql.connector.connect(
             host=os.getenv("DB_HOST"),
@@ -28,18 +28,21 @@ class StudentManager:
         self.cursor = self.connection.cursor()
 
 
-    @property
+    # Method to add a student
     def add_Student(self, student: Student):
         self.cursor.execute(
-            "INSERT INTO students (name, contact, school, income, dob, dependents, region) VALUES (%s, %s, %s, %s, %s, %s)",
-            (name, contact, school, income, dob, dependants, region)
+            """
+            INSERT INTO students (name, contact, school, income, dob, dependents, region) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s),
+            """,
+            (student.name, student.contact, student.school, student.income, student.dob, student.dependents, student.region)
         )
         self.connection.commit()
         print(f"Student '{student.name}' added successfully.✅")
 
 
-    @property
-    def view_students(self, filter_by_region=None, filter_by status=None):
+    # Method to view a student
+    def view_students(self, filter_by_region=None, filter_by_status=None):
         query = "SELECT * FROM students"
         conditions = []
         values = []
@@ -61,15 +64,29 @@ class StudentManager:
         for row in results:
             print(row)
 
-    @property
-    def update_student(self, student_id):
-        """This defines the property to update student details on thier profile."""
+    # Method to update the student profile details
+    def update_student(self, student_id, update_data):
+        """This defines the property to update student details on their profile."""
         updates = []
         values = []
 
-        # Still needs to be finished off ❌!!!
+        # Look over dictionary of fields which can be updated
+        for key, value in update_data.items():
+            updates.append(f"{key} = %s") #e.g "contact = %s"
+            values.append(value)          #e.g 0779234567
 
-    @property delete_student(self, student_id):
+        values.append(student_id) # This is the student we're updating for
+
+        #Join the update strings into one SQL statement
+        query = f"UPDATE students SET {', '.join(updates)} WHERE id = %s"
+
+        # Executing the query and committing the updates
+        self.cursor.excute(query, values)
+        self.connection.commit()
+        print(f"Student {student_id} updated successfully.")
+
+    # Method to delete the student record
+    def delete_student(self, student_id):
         query = "DELETE FROM students WHERE id = %s"
         self.cursor.execute(query, (student_id,))
         self.connection.commit()

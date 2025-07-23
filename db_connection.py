@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import mysql.connector
 from mysql.connector import Error
 from dotenv import load_dotenv
@@ -26,12 +27,13 @@ def create_connection():
     except mysql.connector.Error as e:
         print(f"Error: {e}")
         return None
-
+    
+ # Creating the table students   
 def create_students_table():
     connection = create_connection()
     if connection:
         try:
-            cursor = connection.cursor()  # ✅ FIXED: Call the method
+            cursor = connection.cursor() 
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS students (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -40,7 +42,7 @@ def create_students_table():
                     dob DATE,
                     school VARCHAR(100),
                     region VARCHAR(100),
-                    income_level DECIMAL(10, 2),
+                    income DECIMAL(10, 2),
                     dependents INT,
                     aid_status VARCHAR(20) DEFAULT 'pending'
                 );
@@ -55,10 +57,5 @@ def create_students_table():
     else:
         print("⚠️ Failed to connect. Table not created.")
 
-<<<<<<< HEAD
 # Run it
 create_students_table()
-=======
-# Calling the function
-create_students_table
->>>>>>> f4caeac (.env file created)
