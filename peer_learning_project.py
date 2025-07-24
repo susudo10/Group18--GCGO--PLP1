@@ -81,7 +81,7 @@ def allocate_aid(student_id, aid_id, amount):
         c.execute("SELECT * FROM aid_programs WHERE id = ?", (aid_id,))
         aid = c.fetchone()
         if not aid:
-            raise ValueError("Aid program not found.")
+            raise ValueError("Aid program not found!.")
         time.sleep(1)
         if amount > aid["available_funds"]:
             raise ValueError("Not enough funds available in this program.")
@@ -156,7 +156,7 @@ def display_allocation_menu():
     print("\n--- Allocation Menu ---")
     student_id = input("Enter student ID: ")
     aid_id = input("Enter aid program ID: ")
-    amount = float(input("Enter amount to allocate: "))
+    amount = float(input("Enter amount to allocate : "))
 
     try:
         result = allocate_aid(int(student_id), int(aid_id), amount)
@@ -186,7 +186,7 @@ def main_menu():
             time.sleep(1)
             break
         else:
-            print("Invalid choice. Please try again.")
+            print("Invalid choice.... Please try again.")
             time.sleep(1)
 
 
