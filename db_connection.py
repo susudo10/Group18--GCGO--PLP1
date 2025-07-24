@@ -17,9 +17,9 @@ def create_connection():
         )
 
         if connection.is_connected():
-            print("Connection to the database was successful")
-            print(f"Database name: {connection.database}")
-            print(f"Server version: {connection.server_info}")
+            #print("Connection to the database was successful")
+            #print(f"Database name: {connection.database}")
+            #print(f"Server version: {connection.server_info}")
             return connection
         else:
             print("Connection to the database failed")
