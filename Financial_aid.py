@@ -7,7 +7,7 @@ from db_connection import create_connection
 
 load_dotenv()
 
-
+# Optional: direct test connection
 conn = mysql.connector.connect(
     host=os.getenv("DB_HOST"),
     port=int(os.getenv("DB_PORT")),
@@ -16,6 +16,32 @@ conn = mysql.connector.connect(
     database=os.getenv("DB_NAME")
 )
 
+#  Create AidPrograms
+def create_aid_programs_table():
+    connection = create_connection()
+    if connection is None:
+        print("❌ Could not connect to the database.")
+        return
+
+    try:
+        cursor = connection.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS AidPrograms (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                type VARCHAR(50) NOT NULL,
+                eligibility_criteria TEXT,
+                available_funds FLOAT,
+                target_locality VARCHAR(100)
+            )
+        """)
+        connection.commit()
+
+    except mysql.connector.Error as e:
+        print(f"❌ Error creating table: {e}")
+    finally:
+        cursor.close()
+        connection.close()
 
 # 1. Add Aid Program
 def add_aid_program():
