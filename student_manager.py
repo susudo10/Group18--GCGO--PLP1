@@ -30,20 +30,30 @@ class StudentManager:
 
     # Method to add a student
     def add_student(self, student: Student):
+        # Debug print before the SQL query
+        print("DEBUG - Inserting student with values:")
+        print("Name:", student.name)
+        print("Contact:", student.contact)
+        print("DOB:", student.dob)
+        print("Income:", student.income)
+        print("Dependents:", student.dependents)
+        print("Region:", student.region)
+        print("School:", student.school)
+
         """Adds a new student to the database."""
         self.cursor.execute(
             """
             INSERT INTO students (name, contact, school, income, dob, dependents, region) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s),
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
             """,
             (
                 student.name,
                 student.contact,
-                student.school,
-                student.income,
                 student.dob,
-                student.dependents,
-                student.region
+                student.school,
+                student.region,
+                student.income,
+                student.dependents               
             )
         )
         self.connection.commit()
@@ -52,7 +62,7 @@ class StudentManager:
 
     # Method to view a student
     def view_students(self, filter_by_region=None, filter_by_status=None):
-        query = "SELECT * FROM students"
+        query3 = "SELECT * FROM students"
         conditions = []
         values = []
 
@@ -65,9 +75,9 @@ class StudentManager:
             values.append(filter_by_status)
 
         if conditions:
-            query += " WHERE " + " AND ".join(conditions)
+            query3 += " WHERE " + " AND ".join(conditions)
 
-        self.cursor.execute(query, values)
+        self.cursor.execute(query3, values)
         results = self.cursor.fetchall()
 
         for row in results:
@@ -94,11 +104,11 @@ class StudentManager:
 
 
         #Join the update strings into one SQL statement
-        query = f"UPDATE students SET {set_clause} WHERE id = %s"
+        query1 = f"UPDATE students SET {set_clause} WHERE id = %s"
 
         # Executing the query and committing the updates
         try:
-            self.cursor.excute(query, values)
+            self.cursor.excute(query1, values)
             self.connection.commit()
             print(f"Student {student_id} updated successfully.")
         except Exception as e:
@@ -106,7 +116,23 @@ class StudentManager:
 
     # Method to delete the student record
     def delete_student(self, student_id):
-        query = "DELETE FROM students WHERE id = %s"
-        self.cursor.execute(query, (student_id,))
+        query2 = "DELETE FROM students WHERE id = %s"
+        self.cursor.execute(query2, (student_id,))
         self.connection.commit()
         print("Student deleted successfully.")
+
+def prompt_and_add_student():
+    print("Welcome, we are creating a profile for you...")
+    name = input("Please may you enter your full name: ")
+    contact = input("Enter your contact number: ")
+    dob = input("Enter your date of birth (YYYY-MM-DD): ")
+    income = float(input("Please you enter the average income in your household monthly: "))
+    dependents = int(input("Enter number of dependents in your household "
+    "(don't worry it means the number of people who depend on that income): "))
+    region = input("Enter region: ")
+    school = input("Enter school: ")
+
+    student = Student(None, name, contact, dob, income, dependents, region, school)
+
+    manager = StudentManager()
+    manager.add_student(student)

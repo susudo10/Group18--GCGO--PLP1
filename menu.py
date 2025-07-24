@@ -1,3 +1,6 @@
+from student_manager import *
+from student import Student
+
 def display_main_menu():
     """Display the main menu options."""
     print("\n" + "="*50)
@@ -78,6 +81,7 @@ def demo_navigation():
     
     while True:
         display_main_menu()
+        # choice = get_user_choice("main")
         choice = get_user_choice("main")
         
         if choice is None:  # User pressed Ctrl+C
@@ -90,8 +94,11 @@ def demo_navigation():
                 
                 if student_choice is None:
                     break
-                elif student_choice == 7:  # Back to main menu
+                elif student_choice == 5:  # Back to main menu
                     break
+                elif student_choice == 1: #Add New student
+                    prompt_and_add_student()
+                    input("Student added. Press Enter to continue...")
                 else:
                     print(f"You selected student option {student_choice}")
                     input("Press Enter to continue...")
