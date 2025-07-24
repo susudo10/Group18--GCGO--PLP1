@@ -35,9 +35,8 @@ def create_students_table():
     if connection:
         try:
             cursor = connection.cursor() 
-            cursor.execute("DROP TABLE IF EXISTS Students")
             cursor.execute("""
-                CREATE TABLE IF NOT EXISTS students (
+                CREATE TABLE IF NOT EXISTS Students (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     name VARCHAR(100) NOT NULL,
                     contact VARCHAR(50),

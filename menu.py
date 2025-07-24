@@ -18,7 +18,7 @@ def display_student_menu():
     print("\n" + "="*40)
     print("       STUDENT MANAGEMENT")
     print("="*40)
-    print("Welcome to the Student Management section")
+    print("Welcome to the Student Management section1")
     print("1. Add New Student")
     print("2. View Student Details")
     print("3. Update Student Information")
@@ -101,7 +101,7 @@ def demo_navigation():
                     break
                 elif student_choice == 1: #Add New student
                     prompt_and_add_student()
-                    input("Student added. Press Enter to continue...")
+                    input("Press Enter to continue...")
                 else:
                     print(f"You selected student option {student_choice}")
                     input("Press Enter to continue...")
@@ -123,7 +123,7 @@ def demo_navigation():
             print("Reports & Analytics - Feature coming soon!")
             input("Press Enter to continue...")
             
-        elif choice == 5:
+        elif choice == 4:
             print("Thank you for using the Student Aid Management System!")
             break
 
