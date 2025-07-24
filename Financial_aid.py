@@ -101,3 +101,23 @@ def add_aid_program():
     finally:
         cursor.close()
         conn.close()
+# 2. View aid programs
+
+import mysql.connector
+from db_connection import create_connection
+
+def view_aid_programs(locality=None):
+
+    connection = create_connection()
+
+    if connection:
+        try:
+            cursor = connection.cursor()
+            if locality:
+                query = "SELECT * FROM AidPrograms WHERE target_locality = %s"
+                cursor.execute(query, (locality,))
+            else:
+                cursor.execute("SELECT * FROM AidPrograms")
+
+            programs = cursor.fetchall()
+
