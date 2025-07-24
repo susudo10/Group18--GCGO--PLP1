@@ -18,7 +18,7 @@ def match_students_to_aid(student_id=None, aid_id=None):
     Find suitable aid programs for a student or find eligible students for an aid program.
     """
     if not (student_id or aid_id):
-        raise ValueError("You must provide either a student ID or an aid program ID.")
+        raise ValueError("Please provide either a student ID or an aid program ID.")
     time.sleep(2)
 
     with get_db_connection() as conn:
