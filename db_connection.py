@@ -48,7 +48,7 @@ def create_students_table():
                 );
             """)
             connection.commit()
-            print("✅ Students table created successfully.")
+            """print("✅ Students table created successfully.")"""
         except mysql.connector.Error as e:
             print(f"Error creating table: {e}")
         finally:

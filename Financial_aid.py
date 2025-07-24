@@ -120,4 +120,15 @@ def view_aid_programs(locality=None):
                 cursor.execute("SELECT * FROM AidPrograms")
 
             programs = cursor.fetchall()
+            if programs:
+                headers = ["ID", "Name", "Type", "Eligibility Criteria", "Available Funds", "Target Locality"]
+                print("\n--- List of Aid Programs ---")
+                print(tabulate(programs, headers=headers, tablefmt="fancy_grid"))
+            else:
+                print("⚠️ No aid programs found.")
+        except mysql.connector.Error as e:
+            print(f"❌ Error fetching aid programs: {e}")
+        finally:
+        cursor.close()
+        connection.close()
 
