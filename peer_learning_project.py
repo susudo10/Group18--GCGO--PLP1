@@ -18,6 +18,7 @@ def match_students_to_aid(student_id=None, aid_id=None):
     """
     if not (student_id or aid_id):
         raise ValueError("You must provide either a student ID or an aid program ID.")
+    time.sleep(2)
 
     with get_db_connection() as conn:
         c = conn.cursor()
@@ -27,6 +28,7 @@ def match_students_to_aid(student_id=None, aid_id=None):
             student = c.fetchone()
             if not student:
                 print("No student found.")
+                time.sleep(1)
                 return []
 
             c.execute("""
@@ -43,6 +45,7 @@ def match_students_to_aid(student_id=None, aid_id=None):
             aid = c.fetchone()
             if not aid:
                 print("No aid program found.")
+                time.sleep(1)
                 return []
 
             c.execute("""
@@ -68,15 +71,19 @@ def allocate_aid(student_id, aid_id, amount):
         student = c.fetchone()
         if not student:
             raise ValueError("Student not found.")
+        time.sleep(1)
         if student["aid_status"] == "Funded":
             raise ValueError("Student is already funded.")
+        time.sleep(1)
 
         c.execute("SELECT * FROM aid_programs WHERE id = ?", (aid_id,))
         aid = c.fetchone()
         if not aid:
             raise ValueError("Aid program not found.")
+        time.sleep(1)
         if amount > aid["available_funds"]:
             raise ValueError("Not enough funds available in this program.")
+        time.sleep(1)
 
         timestamp = datetime.now().isoformat()
 
@@ -122,6 +129,7 @@ def display_matching_menu():
                 print(dict(program))
         else:
             print("No matching aid programs found.")
+            time.sleep(1)
     elif choice == "2":
         aid_id = input("Enter aid program ID: ")
         matches = match_students_to_aid(aid_id=int(aid_id))
@@ -131,10 +139,12 @@ def display_matching_menu():
                 print(dict(student))
         else:
             print("No eligible students found.")
+            time.sleep(1)
     elif choice == "3":
         return
     else:
         print("Invalid choice. Please try again.")
+        time.sleep(1)
 
 
 def display_allocation_menu():
@@ -171,9 +181,11 @@ def main_menu():
             display_allocation_menu()
         elif choice == "3":
             print("Goodbye!")
+            time.sleep(1)
             break
         else:
             print("Invalid choice. Please try again.")
+            time.sleep(1)
 
 
 if __name__ == "__main__":
