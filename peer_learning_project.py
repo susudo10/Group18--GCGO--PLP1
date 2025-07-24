@@ -30,6 +30,7 @@ def match_students_to_aid(student_id=None, aid_id=None):
             if not student:
                 print("No student found.")
                 time.sleep(1)
+                sys.exit(1)
                 return []
 
             c.execute("""
