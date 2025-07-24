@@ -15,7 +15,7 @@ load_dotenv() #Loading the .env variables into the script
 
 
 class StudentManager:
-    """ Defines the class Student."""
+    """ Defines the class StudentManager."""
     def __init__(self):
         """ This connects to the aiven databse."""
         self.connection = mysql.connector.connect(
@@ -30,6 +30,7 @@ class StudentManager:
 
     # Method to add a student
     def add_student(self, student: Student):
+        print("Connected to DB from student_manager: ", self.connection.database)
         # Debug print before the SQL query
         print("DEBUG - Inserting student with values:")
         print("Name:", student.name)
@@ -43,26 +44,27 @@ class StudentManager:
         """Adds a new student to the database."""
         self.cursor.execute(
             """
-            INSERT INTO students (name, contact, school, income, dob, dependents, region) 
+            INSERT INTO Students (name, contact, dob, income, dependents, region, school) 
             VALUES (%s, %s, %s, %s, %s, %s, %s)
             """,
             (
                 student.name,
                 student.contact,
                 student.dob,
-                student.school,
-                student.region,
                 student.income,
-                student.dependents               
+                student.dependents,
+                student.region,
+                student.school              
             )
         )
         self.connection.commit()
         print(f"Student '{student.name}' added successfully.✅")
+        print("Connected to DB from student_manager: ", self.connection.database)
 
 
     # Method to view a student
     def view_students(self, filter_by_region=None, filter_by_status=None):
-        query3 = "SELECT * FROM students"
+        query3 = "SELECT * FROM Students"
         conditions = []
         values = []
 
@@ -104,7 +106,7 @@ class StudentManager:
 
 
         #Join the update strings into one SQL statement
-        query1 = f"UPDATE students SET {set_clause} WHERE id = %s"
+        query1 = f"UPDATE Students SET {set_clause} WHERE id = %s"
 
         # Executing the query and committing the updates
         try:
@@ -116,7 +118,7 @@ class StudentManager:
 
     # Method to delete the student record
     def delete_student(self, student_id):
-        query2 = "DELETE FROM students WHERE id = %s"
+        query2 = "DELETE FROM Students WHERE id = %s"
         self.cursor.execute(query2, (student_id,))
         self.connection.commit()
         print("Student deleted successfully.")
@@ -126,13 +128,14 @@ def prompt_and_add_student():
     name = input("Please may you enter your full name: ")
     contact = input("Enter your contact number: ")
     dob = input("Enter your date of birth (YYYY-MM-DD): ")
-    income = float(input("Please you enter the average income in your household monthly: "))
+    income = float(input("Please you enter the average income in your household monthly (RWF) ending with .00: "))
     dependents = int(input("Enter number of dependents in your household "
     "(don't worry it means the number of people who depend on that income): "))
-    region = input("Enter region: ")
-    school = input("Enter school: ")
+    region = input("Enter your region: ")
+    school = input("Enter your school: ")
+    manager = StudentManager()
+    print("Connected to DB from student_manager: ", manager.connection.database)
 
     student = Student(None, name, contact, dob, income, dependents, region, school)
 
-    manager = StudentManager()
     manager.add_student(student)
