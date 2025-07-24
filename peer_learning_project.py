@@ -5,21 +5,17 @@ from datetime import datetime
 
 DB_FILE = "san.db"
 
-
 def get_db_connection():
     """Connect to the database and return a connection object."""
     conn = sqlite3.connect(DB_FILE)
     conn.row_factory = sqlite3.Row
     return conn
 
-
 def match_students_to_aid(student_id=None, aid_id=None):
-    """
-    Find suitable aid programs for a student or find eligible students for an aid program.
-    """
+    """Find suitable aid programs for a student or eligible students for a program."""
     if not (student_id or aid_id):
-        raise ValueError("Please provide either a student ID or an aid program ID.")
-    time.sleep(2)
+        raise ValueError("Provide either a student ID or an aid program ID.")
+    time.sleep(1)
 
     with get_db_connection() as conn:
         c = conn.cursor()
@@ -30,7 +26,6 @@ def match_students_to_aid(student_id=None, aid_id=None):
             if not student:
                 print("No student found.")
                 time.sleep(1)
-                sys.exit(1)
                 return []
 
             c.execute("""
@@ -61,11 +56,8 @@ def match_students_to_aid(student_id=None, aid_id=None):
 
     return matches
 
-
 def allocate_aid(student_id, aid_id, amount):
-    """
-    Allocate a specific aid amount to a student and update records.
-    """
+    """Allocate aid to a student and update records."""
     with get_db_connection() as conn:
         c = conn.cursor()
 
@@ -73,19 +65,15 @@ def allocate_aid(student_id, aid_id, amount):
         student = c.fetchone()
         if not student:
             raise ValueError("Student not found.")
-        time.sleep(1)
         if student["aid_status"] == "Funded":
             raise ValueError("Student is already funded.")
-        time.sleep(1)
 
         c.execute("SELECT * FROM aid_programs WHERE id = ?", (aid_id,))
         aid = c.fetchone()
         if not aid:
-            raise ValueError("Aid program not found!.")
-        time.sleep(1)
+            raise ValueError("Aid program not found.")
         if amount > aid["available_funds"]:
-            raise ValueError("Not enough funds available in this program.")
-        time.sleep(1)
+            raise ValueError("Not enough funds available.")
 
         timestamp = datetime.now().isoformat()
 
@@ -108,22 +96,22 @@ def allocate_aid(student_id, aid_id, amount):
 
         conn.commit()
 
-    return f"Aid of {amount} has been allocated to student {student_id} from program {aid_id}."
-
+    return f"Aid of {amount} allocated to student {student_id} from program {aid_id}."
 
 def display_matching_menu():
-    """
-    Display options for matching students and aid programs.
-    """
+    """Menu for aid matching."""
     print("\n--- Matching Menu ---")
     print("1. Find aid programs for a student")
     print("2. Find eligible students for an aid program")
     print("3. Back to main menu")
 
-    choice = input("Enter your choice: ")
+    choice = input("Enter your choice: ").strip()
 
     if choice == "1":
-        student_id = input("Enter student ID: ")
+        student_id = input("Enter student ID: ").strip()
+        if not student_id.isdigit():
+            print("Invalid student ID. Must be numeric.")
+            return
         matches = match_students_to_aid(student_id=int(student_id))
         if matches:
             print("\nMatching Aid Programs:")
@@ -131,9 +119,11 @@ def display_matching_menu():
                 print(dict(program))
         else:
             print("No matching aid programs found.")
-            time.sleep(1)
     elif choice == "2":
-        aid_id = input("Enter aid program ID: ")
+        aid_id = input("Enter aid program ID: ").strip()
+        if not aid_id.isdigit():
+            print("Invalid aid ID. Must be numeric.")
+            return
         matches = match_students_to_aid(aid_id=int(aid_id))
         if matches:
             print("\nEligible Students:")
@@ -141,41 +131,44 @@ def display_matching_menu():
                 print(dict(student))
         else:
             print("No eligible students found.")
-            time.sleep(1)
     elif choice == "3":
         return
     else:
-        print("Invalid choice. Please try again.")
-        time.sleep(1)
-
+        print("Invalid choice. Try again.")
 
 def display_allocation_menu():
-    """
-    Display options for allocating aid.
-    """
+    """Menu for aid allocation."""
     print("\n--- Allocation Menu ---")
-    student_id = input("Enter student ID: ")
-    aid_id = input("Enter aid program ID: ")
-    amount = float(input("Enter amount to allocate : "))
+    student_id = input("Enter student ID: ").strip()
+    aid_id = input("Enter aid program ID: ").strip()
+    amount_input = input("Enter amount to allocate: ").strip()
+
+    if not student_id.isdigit() or not aid_id.isdigit():
+        print("Student and Aid IDs must be numeric.")
+        return
+
+    try:
+        amount = float(amount_input)
+    except ValueError:
+        print("Invalid amount. Must be a number.")
+        return
 
     try:
         result = allocate_aid(int(student_id), int(aid_id), amount)
         print(result)
     except ValueError as e:
         print(f"Error: {e}")
-
+        time.sleep(1)
 
 def main_menu():
-    """
-    Main command-line menu for the Student Aid Network.
-    """
+    """Main menu loop."""
     while True:
         print("\n=== Student Aid Network ===")
         print("1. Match Students to Aid Programs")
         print("2. Allocate Aid to a Student")
         print("3. Exit")
 
-        choice = input("Enter your choice: ")
+        choice = input("Enter your choice: ").strip()
 
         if choice == "1":
             display_matching_menu()
@@ -186,9 +179,7 @@ def main_menu():
             time.sleep(1)
             break
         else:
-            print("Invalid choice.... Please try again.")
-            time.sleep(1)
-
+            print("Invalid choice. Try again.")
 
 if __name__ == "__main__":
     main_menu()
