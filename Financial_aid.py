@@ -129,8 +129,8 @@ def view_aid_programs(locality=None):
         except mysql.connector.Error as e:
             print(f"❌ Error fetching aid programs: {e}")
         finally:
-        cursor.close()
-        connection.close()
+            cursor.close()
+            connection.close()
 # 3. Update an aid program by ID
 def update_aid_program():
     connection = create_connection()
@@ -169,4 +169,29 @@ def update_aid_program():
 
         new_eligibility = input(f"Eligibility [{program[3]}]: ") or program[3]
 
+        # Validate funds
+        while True:
+            new_funds_input = input(f"Available Funds [{program[4]}]: ")
+            if not new_funds_input:
+                new_funds = program[4]
+                break
+            try:
+                new_funds = float(new_funds_input)
+                break
+            except ValueError:
+                print("❌ Invalid number. Please enter a valid fund amount.")
 
+        new_locality = input(f"Target Locality [{program[5]}]: ") or program[5]
+
+        cursor.execute("""
+                UPDATE AidPrograms 
+                SET type = %s, eligibility_criteria = %s, available_funds = %s, target_locality = %s 
+                WHERE id = %s
+            """, (new_type, new_eligibility, new_funds, new_locality, program_id))
+        connection.commit()
+        print("✅ Aid program updated successfully.")
+    except mysql.connector.Error as e:
+        print(f"❌ Error updating aid program: {e}")
+    finally:
+        cursor.close()
+        connection.close()
