@@ -123,6 +123,8 @@ def display_matching_menu():
         else:
             print("No matching aid programs found.")
             time.sleep(2)
+        input("Press Enter to continue...")
+
     elif choice == "2":
         aid_id = input("Enter aid program ID: ").strip()
         if not aid_id.isdigit():
@@ -135,6 +137,9 @@ def display_matching_menu():
                 print(dict(student))
         else:
             print("No eligible students found.")
+            time.sleep(2)
+        input("\nPress Enter to return to the main menu...")
+        
     elif choice == "3":
         return
     else:
@@ -163,6 +168,7 @@ def display_allocation_menu():
     except ValueError as e:
         print(f"Error: {e}")
         time.sleep(1)
+    input("Press Enter to return to the main menu...")
 
 def main_menu():
     """Main menu loop."""
