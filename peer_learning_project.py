@@ -20,6 +20,7 @@ def match_students_to_aid(student_id=None, aid_id=None):
     with get_db_connection() as conn:
         c = conn.cursor()
 
+       # Retrieve student or aid program based on the provided ID
         if student_id:
             c.execute("SELECT * FROM students WHERE id = ?", (student_id,))
             student = c.fetchone()
@@ -28,6 +29,7 @@ def match_students_to_aid(student_id=None, aid_id=None):
                 time.sleep(1)
                 return []
 
+        # Search for aid programs matching the student's criteria
             c.execute("""
                 SELECT * FROM aid_programs
                 WHERE instr(target_localities, ?) > 0
@@ -37,6 +39,7 @@ def match_students_to_aid(student_id=None, aid_id=None):
             """, (student["locality"], student["income_level"], student["dependents"]))
             matches = c.fetchall()
 
+        # If aid_id is provided, find students who match the program's criteria
         else:
             c.execute("SELECT * FROM aid_programs WHERE id = ?", (aid_id,))
             aid = c.fetchone()
