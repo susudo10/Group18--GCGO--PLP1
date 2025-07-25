@@ -131,4 +131,42 @@ def view_aid_programs(locality=None):
         finally:
         cursor.close()
         connection.close()
+# 3. Update an aid program by ID
+def update_aid_program():
+    connection = create_connection()
+    if connection is None:
+        print("❌ Could not connect to the database.")
+        return
+
+    try:
+        cursor = connection.cursor()
+        program_id = input("Enter ID of the aid program to update: ")
+
+        # Check if program exists
+        cursor.execute("SELECT * FROM AidPrograms WHERE id = %s", (program_id,))
+        program = cursor.fetchone()
+        if not program:
+            print("❌ Aid program not found.")
+            return
+
+        print("Enter new details (press Enter to keep current value):")
+        print("Type options: (s) for scholarship, (f) for fee waiver")
+
+        # Validate new type
+        while True:
+            new_type_input = input(f"Type [{program[2]}]: ").strip().lower()
+            if not new_type_input:
+                new_type = program[2]  # Keep existing
+                break
+            elif new_type_input == 's':
+                new_type = "scholarship"
+                break
+            elif new_type_input == 'f':
+                new_type = "fee waiver"
+                break
+            else:
+                print("❌ Invalid input. Please enter 's' or 'f'.")
+
+        new_eligibility = input(f"Eligibility [{program[3]}]: ") or program[3]
+
 
