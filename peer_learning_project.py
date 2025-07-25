@@ -51,6 +51,7 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+# Match students to aid programs or vice versa
 def match_students_to_aid(student_id=None, aid_id=None):
     """Find suitable aid programs for a student or eligible students for a program."""
     if not (student_id or aid_id):
@@ -97,6 +98,7 @@ def match_students_to_aid(student_id=None, aid_id=None):
 
     return matches
 
+# Allocate aid to a student
 def allocate_aid(student_id, aid_id, amount):
     """Allocate aid to a student and update records."""
     with get_db_connection() as conn:
@@ -187,6 +189,7 @@ def display_matching_menu():
         print("Invalid choice. Try again.")
         time.sleep(1)
 
+# Display aid allocation menu
 def display_allocation_menu():
     """Menu for aid allocation."""
     print("\n--- Allocation Menu ---")
@@ -194,6 +197,7 @@ def display_allocation_menu():
     aid_id = input("Enter aid program ID: ").strip()
     amount_input = input("Enter amount to allocate: ").strip()
 
+    # Validate inputs
     if not student_id.isdigit() or not aid_id.isdigit():
         print("Student and Aid IDs must be numeric.")
         return
