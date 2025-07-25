@@ -222,3 +222,41 @@ def delete_aid_program():
     finally:
         cursor.close()
         connection.close()
+# 4. Menu
+def main_menu():
+    create_aid_programs_table()
+
+    while True:
+        print("\n--- Student Aid Program Management ---")
+        print("1. Add Aid Program")
+        print("2. View All Aid Programs")
+        print("3. View Aid Programs by Locality")
+        print("4. Update Aid Program")
+        print("5. Delete Aid Program")
+        print("6. Exit")
+
+        choice = input("Select an option: ")
+
+        if choice == "1":
+            add_aid_program()
+        elif choice == "2":
+            view_aid_programs()
+        elif choice == "3":
+            loc = input("Enter locality to filter: ")
+            view_aid_programs(loc)
+        elif choice == "4":
+            update_aid_program()
+        elif choice == "5":
+            delete_aid_program()
+        elif choice == "6":
+            print("Exiting... Goodbye!")
+            break
+        else:
+            print("❌ Invalid choice. Try again.")
+
+# Run menu
+if __name__ == "__main__":
+    main_menu()
+    conn.close()
+
+
