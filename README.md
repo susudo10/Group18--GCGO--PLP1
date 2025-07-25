@@ -22,10 +22,17 @@ update_aid_program(aid_id): Modifies details of an existing aid program.
 
 delete_aid_program(aid_id): Removes an aid program record and its associated allocations.
 
-3. Matching and Allocation
-match_students_to_aid(): A core function that helps identify suitable aid programs for a given student or lists students eligible for a specific program, based on criteria like financial status and locality.
+3.  Matching & Allocation
 
-allocate_aid(student_id, aid_id, amount): Records the actual provision of aid to a student from a specific program and updates the program's available funds.
+This is a lightweight Python script designed to streamline aid distribution for student support programs.It uses SQLite to store students, aid programs, allocations, and logs. You can find suitable aid for a student or find students for a program, allocate funding while updating records, and cancel an allocation to refund funds if needed. It offers functionality for:
+
+Matching students to appropriate aid programs based on predefined criteria
+Allocating funds and ensuring accurate updates across the database
+Canceling allocations and automatically refunding aid as necessary
+Technology Stack
+
+Python 3.x
+Built-in sqlite3 module
 
 4. Reporting and Analytics
 generate_aid_report(locality=None): Provides summaries of aid allocated, students supported, or remaining aid funds, filterable by locality.
