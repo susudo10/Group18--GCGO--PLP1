@@ -56,9 +56,9 @@ display_report_menu(): Sub-menu for reporting and analytics tasks.
 get_user_choice(): Handles user input for menu selections.
 
 Program Structure
-The system is organized into multiple Python files for modularity and maintainability:
+The system is organized into multiple Python files:
 
-main.py: The entry point of the application; handles the main program loop and menu navigation.
+main.py: Handles the main program loop and menu navigation.
 
 database.py: Manages all interactions with the SQLite database, including connection, table creation, and CRUD operations.
 
