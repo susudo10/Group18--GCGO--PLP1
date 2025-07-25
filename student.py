@@ -8,13 +8,10 @@ contact, income_level, dependants, locality/region.
 class Student:
     """ Defines the class Student."""
 
-    def __init__(self, student_id, name, contact, dob, school, income, dependents, region):
         """Initialises a new Student instance."""
-        self.student_id = student_id
         self.name = name
         self.contact = contact
         self.dob = dob
-        self.school = school
         self.income = income
         self.dependents = dependents
         self.region = region
@@ -35,7 +32,6 @@ class Student:
         return self.income < 100000 or self.dependents >=3
 
     # Method to update to the student's attributes.
-    def update_info(self, name=None, contact=None, region=None, school=None, income=None, dependents=None):
         """
         Allows for updates to the student's attributes through using optional arguments allowing for updates on chosen fields only.
         """
@@ -43,8 +39,6 @@ class Student:
             self.name = name
         if contact is not None:
             self.contact = contact
-        if region is not None:
-            self.region = region
         if income is not None:
             self.income = income
         if dependents is not None:

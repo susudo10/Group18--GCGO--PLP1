@@ -1,8 +1,12 @@
+from student_manager import *
+from student import Student
+
 def display_main_menu():
     """Display the main menu options."""
     print("\n" + "="*50)
     print("         STUDENT AID MANAGEMENT SYSTEM")
     print("="*50)
+    print("Welcome to the Student Aid Management system")
     print("1. Student Management")
     print("2. Aid Program Management") 
     print("3. Reports & Analytics")
@@ -14,6 +18,7 @@ def display_student_menu():
     print("\n" + "="*40)
     print("       STUDENT MANAGEMENT")
     print("="*40)
+    print("Welcome to the Student Management section1")
     print("1. Add New Student")
     print("2. View Student Details")
     print("3. Update Student Information")
@@ -26,6 +31,7 @@ def display_aid_menu():
     print("\n" + "="*40)
     print("    AID PROGRAM MANAGEMENT")
     print("="*40)
+    print("Welcome to the Aid Program Management section")
     print("1. Create New Aid Program")
     print("2. Assign Aid to Student")
     print("3. Back to Main Menu")
@@ -78,6 +84,7 @@ def demo_navigation():
     
     while True:
         display_main_menu()
+        # choice = get_user_choice("main")
         choice = get_user_choice("main")
         
         if choice is None:  # User pressed Ctrl+C
@@ -90,8 +97,11 @@ def demo_navigation():
                 
                 if student_choice is None:
                     break
-                elif student_choice == 7:  # Back to main menu
+                elif student_choice == 5:  # Back to main menu
                     break
+                elif student_choice == 1: #Add New student
+                    prompt_and_add_student()
+                    input("Press Enter to continue...")
                 else:
                     print(f"You selected student option {student_choice}")
                     input("Press Enter to continue...")
@@ -113,7 +123,7 @@ def demo_navigation():
             print("Reports & Analytics - Feature coming soon!")
             input("Press Enter to continue...")
             
-        elif choice == 5:
+        elif choice == 4:
             print("Thank you for using the Student Aid Management System!")
             break
 
