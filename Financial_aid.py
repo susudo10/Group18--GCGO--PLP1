@@ -195,3 +195,9 @@ def update_aid_program():
     finally:
         cursor.close()
         connection.close()
+def delete_aid_program():
+    connection = create_connection()
+    if connection is None:
+        print("❌ Could not connect to the database.")
+        return
+
