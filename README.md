@@ -55,25 +55,6 @@ display_report_menu(): Sub-menu for reporting and analytics tasks.
 
 get_user_choice(): Handles user input for menu selections.
 
-
-
-Program Structure:
-The system is organized into multiple Python files:
-
-main.py: Handles the main program loop and menu navigation.
-
-database.py: Manages all interactions with the SQLite database, including connection, table creation, and CRUD operations.
-
-student_manager.py: Contains the logic for all student-related functionalities.
-
-aid_manager.py: Contains the logic for all financial aid program-related functionalities.
-
-allocation_manager.py: Handles the core matching and aid allocation processes.
-
-report_manager.py: Generates various analytical reports.
-
-menu.py: Defines and displays all the user menus.
-
 How to Run
 To get the Financial Aid Management System up and running:
 
