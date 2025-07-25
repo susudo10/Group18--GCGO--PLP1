@@ -55,7 +55,9 @@ display_report_menu(): Sub-menu for reporting and analytics tasks.
 
 get_user_choice(): Handles user input for menu selections.
 
-Program Structure
+
+
+Program Structure:
 The system is organized into multiple Python files:
 
 main.py: Handles the main program loop and menu navigation.
