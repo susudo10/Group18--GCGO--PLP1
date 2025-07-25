@@ -5,7 +5,6 @@ class StudentManager:
         self.db = db
 
     def add_student(self):
-        """Gathers and records essential student details."""
         print("\n--- Add New Student ---")
         name = input("Enter student name: ")
         contact = input("Enter student contact info (phone/email): ")
@@ -129,7 +128,6 @@ class StudentManager:
         print(f"\n--- Delete Student (ID: {student_id}) ---")
         confirm = input(f"Are you sure you want to delete student ID {student_id} and all associated aid allocations? (yes/no): ").lower()
         if confirm == 'yes':
-            # Database ON DELETE CASCADE handles AidAllocations, so only delete from Students
             query = "DELETE FROM Students WHERE student_id = ?"
             if self.db.execute_query(query, (student_id,)):
                 if self.db.cursor.rowcount > 0: # Check if a row was actually deleted
