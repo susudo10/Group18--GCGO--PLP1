@@ -116,7 +116,7 @@ def allocate_aid(student_id, aid_id, amount):
         if not aid:
             raise ValueError("Aid program not found.")
         if amount > aid["available_funds"]:
-            raise ValueError("Not enough funds available.")
+            raise ValueError("Not enough funds available...")
 
         timestamp = datetime.now().isoformat()
 
@@ -199,7 +199,7 @@ def display_allocation_menu():
 
     # Validate inputs
     if not student_id.isdigit() or not aid_id.isdigit():
-        print("Student and Aid IDs must be numeric.")
+        print("Student and Aid IDs must be numeric(numbers).")
         return
 
     try:
