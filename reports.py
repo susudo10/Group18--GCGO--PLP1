@@ -1,21 +1,11 @@
-# student_aid_network/reports.py
-
-import os
 from database import Database
-
-def clear_screen():
-    """Clears the console screen."""
-    os.system('cls' if os.name == 'nt' else 'clear')
 
 class ReportManager:
     def __init__(self, db: Database):
         self.db = db
 
     def generate_aid_report(self, locality=None):
-        """
-        Provides summaries of aid allocated, students supported, or remaining aid funds,
-        filterable by locality.
-        """
+        
         print("\n--- Aid Allocation Report ---")
         query_allocated_aid = """
             SELECT SUM(aa.amount), COUNT(DISTINCT aa.student_id)

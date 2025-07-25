@@ -3,7 +3,7 @@ from student_manager import StudentManager
 from aid_manager import AidManager
 from allocation_manager import AllocationManager
 from reports import ReportManager
-from menu import Menu
+from menu1 import Menu
 from user_exp import clear_screen
 
 def main():
