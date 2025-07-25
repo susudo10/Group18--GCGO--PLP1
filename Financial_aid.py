@@ -7,7 +7,7 @@ from db_connection import create_connection
 
 load_dotenv()
 
-# Optional: direct test connection
+
 conn = mysql.connector.connect(
     host=os.getenv("DB_HOST"),
     port=int(os.getenv("DB_PORT")),
@@ -16,7 +16,7 @@ conn = mysql.connector.connect(
     database=os.getenv("DB_NAME")
 )
 
-#  Create AidPrograms
+#  Create AidPrograms Table
 def create_aid_programs_table():
     connection = create_connection()
     if connection is None:
@@ -156,7 +156,7 @@ def update_aid_program():
         while True:
             new_type_input = input(f"Type [{program[2]}]: ").strip().lower()
             if not new_type_input:
-                new_type = program[2]  # Keep existing
+                new_type = program[2]
                 break
             elif new_type_input == 's':
                 new_type = "scholarship"
@@ -200,4 +200,26 @@ def delete_aid_program():
     if connection is None:
         print("❌ Could not connect to the database.")
         return
+    try:
+        cursor = connection.cursor()
+        program_id = input("Enter ID of the aid program to delete: ")
+        cursor.execute("SELECT name FROM AidPrograms WHERE id = %s", (program_id,))
+        program = cursor.fetchone()
+        if not program:
+            print("❌ Aid program not found.")
+            return
+
+        confirm = input(f"Are you sure you want to delete aid program '{program[0]}'? (y/n): ").lower()
+        if confirm == 'y':
+            cursor.execute("DELETE FROM AidPrograms WHERE id = %s", (program_id,))
+            connection.commit()
+            print("✅ Aid program deleted successfully.")
+        else:
+            print("❌ Deletion cancelled.")
+
+    except mysql.connector.Error as e:
+        print(f"❌ Error deleting aid program: {e}")
+    finally:
+        cursor.close()
+        connection.close()
 
