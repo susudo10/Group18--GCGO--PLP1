@@ -122,6 +122,7 @@ def display_matching_menu():
                 print(dict(program))
         else:
             print("No matching aid programs found.")
+            time.sleep(2)
     elif choice == "2":
         aid_id = input("Enter aid program ID: ").strip()
         if not aid_id.isdigit():
@@ -178,7 +179,7 @@ def main_menu():
         elif choice == "2":
             display_allocation_menu()
         elif choice == "3":
-            print("Goodbye!")
+            print("Goodbye!...")
             time.sleep(1)
             break
         else:

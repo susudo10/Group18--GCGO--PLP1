@@ -105,7 +105,7 @@ class StudentManager:
             query = f"UPDATE Students SET {field} = %s WHERE id = %s"
             self.cursor.execute(query, (new_value, student_id))
             self.connection.commit()
-            print("✅ Student info updated successfully.")
+            print(" Student info updated successfully.")
         except mysql.connector.Error as e:
             print(f"Error updating student info: {e}")
     # Method to update the student profile details
@@ -180,14 +180,14 @@ if __name__ == "__main__":
     manager = StudentManager()
 
     # List all students
-    print("\n🔍 Testing: List All Students")
+    print("\n Testing: List All Students")
     manager.list_all_students()
 
     # View one student by ID
-    print("\n🔍 Testing: View Student Details")
+    print("\n Testing: View Student Details")
     manager.view_student_details(1)  # Use a valid ID from your DB
 
     # Update student info
-    print("\n✏️ Testing: Update Student Info")
+    print("\n Testing: Update Student Info")
     manager.update_student_info(1, "contact", "0788888888")  # Use a valid ID and field
 
