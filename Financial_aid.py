@@ -1,12 +1,12 @@
 import os
 from dotenv import load_dotenv
 import mysql.connector
+from tabulate import tabulate
 
 # Import  connection function
 from db_connection import create_connection
 
 load_dotenv()
-
 
 conn = mysql.connector.connect(
     host=os.getenv("DB_HOST"),
@@ -222,4 +222,3 @@ def delete_aid_program():
     finally:
         cursor.close()
         connection.close()
-
