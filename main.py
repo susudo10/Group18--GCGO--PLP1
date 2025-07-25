@@ -3,7 +3,7 @@ from student_manager import StudentManager
 from aid_manager import AidManager
 from allocation_manager import AllocationManager
 from reports import ReportManager
-from menu1 import Menu
+from menu import Menu
 from user_exp import clear_screen
 
 def main():
@@ -14,21 +14,21 @@ def main():
     report_mgr = ReportManager(db)
     menu = Menu()
 
-    clear_screen() # Clear screen at the very beginning
+    clear_screen()
 
     while True:
         menu.display_main_menu()
         main_choice = menu.get_user_choice()
-        clear_screen() # Clear screen after main menu choice
+        clear_screen()
 
         if main_choice == '1':
             while True:
                 menu.display_student_menu()
                 student_choice = menu.get_user_choice()
-                clear_screen() # Clear screen after student menu choice
+                clear_screen()
                 if student_choice == '1':
                     student_mgr.add_student()
-                    input("\nPress Enter to continue...") # Pause after action
+                    input("\nPress Enter to continue...")
                     clear_screen()
                 elif student_choice == '2':
                     filter_loc = input("Filter by locality (leave empty for all): ")
@@ -55,7 +55,7 @@ def main():
             while True:
                 menu.display_aid_menu()
                 aid_choice = menu.get_user_choice()
-                clear_screen() # Clear screen after aid menu choice
+                clear_screen()
                 if aid_choice == '1':
                     aid_mgr.add_aid_program()
                     input("\nPress Enter to continue...")
@@ -84,7 +84,7 @@ def main():
             while True:
                 menu.display_allocation_menu()
                 allocation_choice = menu.get_user_choice()
-                clear_screen() # Clear screen after allocation menu choice
+                clear_screen()
                 if allocation_choice == '1':
                     allocation_mgr.match_students_to_aid()
                     input("\nPress Enter to continue...")
@@ -104,7 +104,7 @@ def main():
             while True:
                 menu.display_report_menu()
                 report_choice = menu.get_user_choice()
-                clear_screen() # Clear screen after report menu choice
+                clear_screen()
                 if report_choice == '1':
                     report_loc = input("Generate report for locality (leave empty for all): ")
                     report_mgr.generate_aid_report(report_loc if report_loc else None)

@@ -8,8 +8,7 @@ class Database:
         self._connect_db()
         self._create_tables()
 
-    def _connect_db(self):
-        """Establishes a connection to the SQLite database."""
+    def _connect_db(self):#Establishes a connection to the SQLite database
         try:
             self.conn = sqlite3.connect(self.db_name)
             self.cursor = self.conn.cursor()
@@ -17,8 +16,7 @@ class Database:
             print(f"Database connection error: {e}")
             exit()
 
-    def _create_tables(self):
-        """Creates necessary tables if they don't exist."""
+    def _create_tables(self):#Creates necessary tables if they don't exist
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS Students (
                 student_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -53,7 +51,6 @@ class Database:
         self.conn.commit()
 
     def execute_query(self, query, params=()):
-        """Executes a given SQL query with optional parameters."""
         try:
             self.cursor.execute(query, params)
             self.conn.commit()
@@ -62,8 +59,7 @@ class Database:
             print(f"Database query error: {e}")
             return False
 
-    def fetch_all(self, query, params=()):
-        """Fetches all results from a given SQL query."""
+    def fetch_all(self, query, params=()):#Fetches all results
         try:
             self.cursor.execute(query, params)
             return self.cursor.fetchall()
@@ -72,7 +68,6 @@ class Database:
             return []
 
     def fetch_one(self, query, params=()):
-        """Fetches a single result from a given SQL query."""
         try:
             self.cursor.execute(query, params)
             return self.cursor.fetchone()
@@ -81,7 +76,6 @@ class Database:
             return None
 
     def close_connection(self):
-        """Closes the database connection."""
         if self.conn:
             self.conn.close()
             print("Database connection closed.")

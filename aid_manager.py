@@ -5,7 +5,6 @@ class AidManager:
         self.db = db
 
     def add_aid_program(self):
-        """Allows authorities to input details of available local aid programs."""
         print("\n--- Add New Aid Program ---")
         name = input("Enter scholarship/program name: ")
         aid_type = input("Enter type of aid (e.g., Scholarship, Grant, Loan): ")
@@ -25,7 +24,6 @@ class AidManager:
             print(f"Failed to add aid program '{name}'.")
 
     def view_aid_programs(self, filter_by_locality=None):
-        """Lists all registered aid programs, with filtering options."""
         print("\n--- View Aid Programs ---")
         query = "SELECT aid_id, name, type, eligibility_criteria, available_funds, target_localities FROM AidPrograms WHERE 1=1"
         params = []
@@ -44,11 +42,8 @@ class AidManager:
         print("-" * 80)
         for program in aid_programs:
             print(f"{program[0]:<5} {program[1]:<25} {program[2]:<15} {program[4]:<12.2f} {program[5]:<20}")
-            # Optionally, print full eligibility for detailed view:
-            # print(f"  Eligibility: {program[3]}")
 
     def update_aid_program(self):
-        """Modifies details of an existing aid program."""
         aid_id_str = input("Enter the ID of the aid program to update: ")
         try:
             aid_id = int(aid_id_str)
@@ -103,7 +98,6 @@ class AidManager:
             print(f"Failed to update aid program ID {aid_id}.")
 
     def delete_aid_program(self):
-        """Removes an aid program record from the system."""
         aid_id_str = input("Enter the ID of the aid program to delete: ")
         try:
             aid_id = int(aid_id_str)

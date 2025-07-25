@@ -5,10 +5,6 @@ class AllocationManager:
         self.db = db
 
     def match_students_to_aid(self):
-        """
-        Helps identify suitable aid programs for a given student or lists students
-        eligible for a specific program, based on criteria like financial status and locality.
-        """
         print("\n--- Match Students to Aid / Find Eligible Students ---")
         print("1. Find aid programs for a specific student")
         print("2. Find students eligible for a specific aid program")
@@ -31,8 +27,6 @@ class AllocationManager:
             print(f"\nMatching aid programs for student: {s_name} (ID: {student_id})")
             print(f"  Locality: {s_locality}, Income: {s_income}, Dependents: {s_dependents}")
 
-            # Find aid programs that target the student's locality
-            # And where available funds are > 0
             query = """
                 SELECT aid_id, name, type, eligibility_criteria, available_funds, target_localities
                 FROM AidPrograms
@@ -69,15 +63,10 @@ class AllocationManager:
             print(f"\nFinding students eligible for aid program: {p_name} (ID: {aid_id})")
             print(f"  Type: {p_type}, Eligibility: {p_eligibility}, Funds: {p_funds}, Localities: {p_localities}")
 
-            # Assuming eligibility criteria can be broadly matched by locality and income for this demo.
-            # In a real system, 'eligibility_criteria' would need parsing.
-            # For simplicity, let's say "needy" students are those with income < 50000,
-            # and they must be in the target localities.
             target_localities_list = [loc.strip() for loc in p_localities.split(',')]
             locality_placeholders = ', '.join(['?' for _ in target_localities_list])
-            
-            # Example: Find students in target localities with income < a certain threshold (e.g., 50000)
-            needy_threshold = 50000 # This threshold would ideally be part of the aid program eligibility criteria
+
+            needy_threshold = 50000 # This threshold for the aid program eligibility criteria
             
             query = f"""
                 SELECT student_id, name, contact, locality, income_level, num_dependents
@@ -102,7 +91,6 @@ class AllocationManager:
             print("Invalid choice.")
 
     def allocate_aid(self):
-        """Records the actual provision of aid to a student from a specific program."""
         print("\n--- Allocate Aid ---")
         student_id_str = input("Enter Student ID for allocation: ")
         aid_id_str = input("Enter Aid Program ID for allocation: ")
