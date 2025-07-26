@@ -106,31 +106,41 @@ def add_aid_program():
 import mysql.connector
 from db_connection import create_connection
 
-def view_aid_programs(locality=None):
-
+def view_aid_programs(locality=None, aid_type=None):
     connection = create_connection()
+    if not connection:
+        print("❌ Could not connect to the database.")
+        return
 
-    if connection:
-        try:
-            cursor = connection.cursor()
-            if locality:
-                query = "SELECT * FROM AidPrograms WHERE target_locality = %s"
-                cursor.execute(query, (locality,))
-            else:
-                cursor.execute("SELECT * FROM AidPrograms")
+    try:
+        cursor = connection.cursor()
 
-            programs = cursor.fetchall()
-            if programs:
-                headers = ["ID", "Name", "Type", "Eligibility Criteria", "Available Funds", "Target Locality"]
-                print("\n--- List of Aid Programs ---")
-                print(tabulate(programs, headers=headers, tablefmt="fancy_grid"))
-            else:
-                print("⚠️ No aid programs found.")
-        except mysql.connector.Error as e:
-            print(f"❌ Error fetching aid programs: {e}")
-        finally:
-            cursor.close()
-            connection.close()
+        query = "SELECT * FROM AidPrograms WHERE 1=1"
+        params = []
+
+        if locality:
+            query += " AND target_locality = %s"
+            params.append(locality)
+
+        if aid_type:
+            query += " AND type = %s"
+            params.append(aid_type)
+
+        cursor.execute(query, tuple(params))
+        programs = cursor.fetchall()
+
+        if programs:
+            headers = ["ID", "Name", "Type", "Eligibility Criteria", "Available Funds", "Target Locality"]
+            print("\n--- List of Aid Programs ---")
+            print(tabulate(programs, headers=headers, tablefmt="fancy_grid"))
+        else:
+            print("⚠️ No aid programs found.")
+
+    except mysql.connector.Error as e:
+        print(f"❌ Error fetching aid programs: {e}")
+    finally:
+        cursor.close()
+        connection.close()
 # 3. Update an aid program by ID
 def update_aid_program():
     connection = create_connection()
@@ -229,31 +239,73 @@ def main_menu():
     while True:
         print("\n--- Student Aid Program Management ---")
         print("1. Add Aid Program")
-        print("2. View All Aid Programs")
-        print("3. View Aid Programs by Locality")
-        print("4. Update Aid Program")
-        print("5. Delete Aid Program")
-        print("6. Exit")
+        print("2. View Aid Programs")
+        print("3. Update Aid Program")
+        print("4. Delete Aid Program")
+        print("5. Exit")
 
         choice = input("Select an option: ")
 
         if choice == "1":
             add_aid_program()
+
         elif choice == "2":
-            view_aid_programs()
+            print("\nView Options:")
+            print("1. View all aid programs")
+            print("2. Filter by location")
+            print("3. Filter by type")
+            print("4. Filter by both location and type")
+            sub_choice = input("Choose a view option: ")
+
+            if sub_choice == "1":
+                view_aid_programs()
+
+            elif sub_choice == "2":
+                loc = input("Enter locality: ")
+                view_aid_programs(locality=loc)
+
+            elif sub_choice == "3":
+                while True:
+                    aid_type_input = input("Enter aid type - (s) for scholarship or (f) for fee waiver: ").lower()
+                    if aid_type_input == 's':
+                        aid_type = "scholarship"
+                        break
+                    elif aid_type_input == 'f':
+                        aid_type = "fee waiver"
+                        break
+                    else:
+                        print("❌ Invalid input. Please enter 's' or 'f'.")
+                view_aid_programs(aid_type=aid_type)
+
+            elif sub_choice == "4":
+                loc = input("Enter locality: ")
+                while True:
+                    aid_type_input = input("Enter aid type - (s) for scholarship or (f) for fee waiver: ").lower()
+                    if aid_type_input == 's':
+                        aid_type = "scholarship"
+                        break
+                    elif aid_type_input == 'f':
+                        aid_type = "fee waiver"
+                        break
+                    else:
+                        print("❌ Invalid input. Please enter 's' or 'f'.")
+                view_aid_programs(locality=loc, aid_type=aid_type)
+
+            else:
+                print("❌ Invalid view option.")
+
         elif choice == "3":
-            loc = input("Enter locality to filter: ")
-            view_aid_programs(loc)
-        elif choice == "4":
             update_aid_program()
-        elif choice == "5":
+
+        elif choice == "4":
             delete_aid_program()
-        elif choice == "6":
+
+        elif choice == "5":
             print("Exiting... Goodbye!")
             break
+
         else:
             print("❌ Invalid choice. Try again.")
-
 # Run menu
 if __name__ == "__main__":
     main_menu()
