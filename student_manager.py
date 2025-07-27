@@ -184,10 +184,10 @@ if __name__ == "__main__":
     manager.list_all_students()
 
     # View one student by ID
-    print("\n🔍 Testing: View Student Details")
-    manager.view_student_details(1)  # Use a valid ID from your DB
+    # print("\n🔍 Testing: View Student Details")
+    # manager.view_student_details(1)  # Use a valid ID from your DB
 
-    # Update student info
-    print("\n✏️ Testing: Update Student Info")
-    manager.update_student_info(1, "contact", "0788888888")  # Use a valid ID and field
+    # # Update student info
+    # print("\n✏️ Testing: Update Student Info")
+    # manager.update_student_info(1, "contact", "0788888888")  # Use a valid ID and field
 
