@@ -7,6 +7,7 @@ import sys
 import sqlite3
 from datetime import datetime
 from db_connection import create_connection
+from db_connect import connect_to_database
 
 DB_FILE = "san.db"
 
@@ -48,7 +49,7 @@ def setup_db():
 # Get a database connection
 def get_db_connection():
     """Connect to the database and return a connection object."""
-    conn = sqlite3.connect(DB_FILE)
+    conn = connect_to_database()
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -64,7 +65,7 @@ def match_students_to_aid(student_id=None, aid_id=None):
 
         # If student_id is provided, find matching aid programs
         if student_id:
-            c.execute("SELECT * FROM students WHERE id = ?", (student_id,))
+            c.execute("SELECT * FROM Students WHERE id = ?", (student_id))
             student = c.fetchone()
             if not student:
                 print("No student found.")

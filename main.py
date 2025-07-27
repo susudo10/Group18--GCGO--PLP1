@@ -2,7 +2,7 @@ from database import Database
 from student_manager import *
 from db_connection import *
 from aid_manager import AidManager
-from allocation_manager import AllocationManager
+from allocation_manager import match_students_to_aid, allocate_aid
 from reports import ReportManager
 from menu import Menu
 from user_exp import clear_screen
@@ -10,7 +10,7 @@ from user_exp import clear_screen
 db = Database()
 student_mgr = StudentManager(db)
 aid_mgr = AidManager(db)
-allocation_mgr = AllocationManager(db)
+# allocation_mgr = AllocationManager(db)
 report_mgr = ReportManager(db)
 menu = Menu()
 
@@ -112,11 +112,11 @@ def main():
                 allocation_choice = menu.get_user_choice()
                 clear_screen()
                 if allocation_choice == '1':
-                    allocation_mgr.match_students_to_aid()
+                    match_students_to_aid()
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif allocation_choice == '2':
-                    allocation_mgr.allocate_aid()
+                    allocate_aid()
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif allocation_choice == '3':
