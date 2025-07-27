@@ -1,5 +1,6 @@
 from database import Database
 from student_manager import *
+from db_connection import *
 from aid_manager import AidManager
 from allocation_manager import AllocationManager
 from reports import ReportManager

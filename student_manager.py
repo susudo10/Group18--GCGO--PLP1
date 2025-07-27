@@ -190,3 +190,5 @@ if __name__ == "__main__":
     # # Update student info
     # print("\n✏️ Testing: Update Student Info")
     # manager.update_student_info(1, "contact", "0788888888")  # Use a valid ID and field
+
+prompt_and_add_student()
