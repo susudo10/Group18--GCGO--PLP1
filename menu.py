@@ -1,6 +1,12 @@
 class Menu:
     def display_main_menu(self):
         """Presents the top-level options."""
+
+        print("\033[96m" + "="*60)
+        print("🎓  WELCOME TO THE STUDENT AID MANAGEMENT SYSTEM  🎓")
+        print("="*60 + "\033[0m")
+        print("Manage students, aid programs, and allocations with ease.\n")
+
         print("\n===== Financial Aid Management System =====")
         print("1. Student Management")
         print("2. Financial Aid Program Management")
