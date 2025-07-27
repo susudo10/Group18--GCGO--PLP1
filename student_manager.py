@@ -7,6 +7,7 @@ import mysql.connector
 from student import Student  # Assuming you have a Student class in student.py
 import os
 from dotenv import load_dotenv
+from db_connection import create_connection
 
 load_dotenv()
 
