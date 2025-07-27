@@ -1,140 +1,166 @@
-from database import Database
+#!/usr/bin/python3
+"""
+Manages student records with database operations and user prompts.
+"""
+
+import mysql.connector
+from student import Student  # Assuming you have a Student class in student.py
+import os
+from dotenv import load_dotenv
+from db_connection import create_connection
+load_dotenv()
+
 
 class StudentManager:
-    def __init__(self, db: Database):
-        self.db = db
+    def __init__(self, db):
+        self.connection = mysql.connector.connect(
+            host=os.getenv("DB_HOST"),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"),
+            database=os.getenv("DB_NAME"),
+            port=os.getenv("DB_PORT")
+        )
+        self.cursor = self.connection.cursor()
 
-    def add_student(self):
-        print("\n--- Add New Student ---")
-        name = input("Enter student name: ")
-        contact = input("Enter student contact info (phone/email): ")
-        locality = input("Enter student locality: ")
-        while True:
-            try:
-                income_level = float(input("Enter family income level: "))
-                break
-            except ValueError:
-                print("Invalid input. Please enter a number for income level.")
-        while True:
-            try:
-                num_dependents = int(input("Enter number of dependents: "))
-                break
-            except ValueError:
-                print("Invalid input. Please enter an integer for number of dependents.")
+    def add_student(self, student: Student):
+        try:
+            self.cursor.execute(
+                """
+                INSERT INTO Students (name, contact, dob, income, dependents, region, school) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                """,
+                (
+                    student.name,
+                    student.contact,
+                    student.dob,
+                    student.income,
+                    student.dependents,
+                    student.region,
+                    student.school
+                )
+            )
+            self.connection.commit()
+            print(f"\n✅ Student '{student.name}' added successfully.✅")
 
-        query = "INSERT INTO Students (name, contact, locality, income_level, num_dependents) VALUES (?, ?, ?, ?, ?)"
-        if self.db.execute_query(query, (name, contact, locality, income_level, num_dependents)):
-            print(f"Student '{name}' added successfully.")
-        else:
-            print(f"Failed to add student '{name}'.")
+        except mysql.connector.Error as e:
+            print(f"❌ Error adding student: {e}")
+    
+    def view_student_details(self, student_id):
+        try:
+            self.cursor.execute("SELECT id, name, contact, dob, income, dependents, region, school, aid_status FROM Students WHERE id = %s", (student_id,))
+            student = self.cursor.fetchone()
 
-    def view_students(self, filter_by_locality=None, filter_by_status=None):
-        """Displays a list of registered students, with options to filter."""
-        print("\n--- View Students ---")
-        query = "SELECT student_id, name, contact, locality, income_level, num_dependents FROM Students WHERE 1=1"
+            if not student:
+                print(f"No student found with ID {student_id}.")
+                return
+
+            print("\n--- Student Profile ---")
+            print("-" * 40)
+            print(f"{'ID':<15}: {student[0]}")
+            print(f"{'Full Name':<15}: {student[1]}")
+            print(f"{'Contact':<15}: {student[2]}")
+            print(f"{'Date of Birth':<15}: {student[3]}")
+            print(f"{'Income (RWF)':<15}: {student[4]:,.2f}")
+            print(f"{'Dependents':<15}: {student[5]}")
+            print(f"{'Region':<15}: {student[6]}")
+            print(f"{'School':<15}: {student[7]}")
+            print(f"{'Aid Status':<15}: {student[8] or 'N/A'}")
+            print("-" * 40)
+
+        except mysql.connector.Error as e:
+            print(f"Error retrieving student details: {e}")
+
+    def filter_students(self, region=None, aid_status=None):
+        query = "SELECT * FROM Students WHERE 1=1"
         params = []
+        if region:
+            query += " AND region = %s"
+            params.append(region)
+        if aid_status:
+            query += " AND aid_status = %s"
+            params.append(aid_status)
 
-        if filter_by_locality:
-            query += " AND locality LIKE ?"
-            params.append(f"%{filter_by_locality}%")
-
-        if filter_by_status and filter_by_status.lower() == 'needy':
-            needy_threshold = 50000  # Example: annual income below 50,000
-            query += " AND income_level < ?"
-            params.append(needy_threshold)
-
-        students = self.db.fetch_all(query, params)
-
-        if not students:
+        self.cursor.execute(query, params)
+        results = self.cursor.fetchall()
+        if not results:
             print("No students found matching the criteria.")
             return
+        
+        headers = [desc[0] for desc in self.cursor.description]
+        print(" | ".join(f"{h:<15}" for h in headers))
+        print("-" * (len(headers)*18))
+        for row in results:
+            print(" | ".join(f"{str(field):<15}" for field in row))
 
-        print(f"{'ID':<5} {'Name':<20} {'Contact':<25} {'Locality':<15} {'Income':<10} {'Dependents':<10}")
-        print("-" * 85)
+
+    def list_all_students(self):
+        self.cursor.execute("SELECT * FROM Students")
+        students = self.cursor.fetchall()
+        if not students:
+            print("No student records found.")
+            return
+    
+        # Print header row 
+        print(f"{'ID':<4} {'Name':<20} {'Contact':<12} {'DOB':<12} {'Income':<10} {'Deps':<5} {'Region':<10} {'School':<15} {'Aid Status':<10}")
+        print("-" * 110)
+    
         for student in students:
-            print(f"{student[0]:<5} {student[1]:<20} {student[2]:<25} {student[3]:<15} {student[4]:<10.2f} {student[5]:<10}")
-
-    def update_student_profile(self):
-        """Modifies existing student information."""
-        student_id_str = input("Enter the ID of the student to update: ")
-        try:
-            student_id = int(student_id_str)
-        except ValueError:
-            print("Invalid student ID. Please enter a number.")
-            return
-
-        print(f"\n--- Update Student Profile (ID: {student_id}) ---")
-        student = self.db.fetch_one("SELECT * FROM Students WHERE student_id = ?", (student_id,))
-
-        if not student:
-            print(f"No student found with ID: {student_id}")
-            return
-
-        print(f"Current Name: {student[1]}")
-        new_name = input("Enter new name (press Enter to keep current): ")
-        if not new_name:
-            new_name = student[1]
-
-        print(f"Current Contact: {student[2]}")
-        new_contact = input("Enter new contact (press Enter to keep current): ")
-        if not new_contact:
-            new_contact = student[2]
-
-        print(f"Current Locality: {student[3]}")
-        new_locality = input("Enter new locality (press Enter to keep current): ")
-        if not new_locality:
-            new_locality = student[3]
-
-        current_income_level = student[4]
-        print(f"Current Income Level: {current_income_level}")
-        new_income_level_str = input("Enter new income level (press Enter to keep current): ")
-        if new_income_level_str:
+            income_val = student[4]
             try:
-                new_income_level = float(new_income_level_str)
-            except ValueError:
-                print("Invalid input for income level. Keeping current value.")
-                new_income_level = current_income_level
-        else:
-            new_income_level = current_income_level
+                income_val = f"{float(income_val):.2f}"
+            except (TypeError, ValueError):
+                income_val = str(income_val) if income_val is not None else "N/A"
+        
+            print(f"{student[0]:<4} {student[1]:<20} {student[2]:<12} {str(student[3]):<12} {income_val:<10} "
+              f"{student[5]:<5} {student[6]:<10} {student[7]:<15} {student[8] or 'N/A':<10}")
 
-        current_num_dependents = student[5]
-        print(f"Current Number of Dependents: {current_num_dependents}")
-        new_num_dependents_str = input("Enter new number of dependents (press Enter to keep current): ")
-        if new_num_dependents_str:
-            try:
-                new_num_dependents = int(new_num_dependents_str)
-            except ValueError:
-                print("Invalid input for number of dependents. Keeping current value.")
-                new_num_dependents = current_num_dependents
-        else:
-            new_num_dependents = current_num_dependents
 
-        query = "UPDATE Students SET name=?, contact=?, locality=?, income_level=?, num_dependents=? WHERE student_id=?"
-        params = (new_name, new_contact, new_locality, new_income_level, new_num_dependents, student_id)
-        if self.db.execute_query(query, params):
-            print(f"Student ID {student_id} updated successfully.")
-        else:
-            print(f"Failed to update student ID {student_id}.")
-
-    def delete_student(self):
-        """Removes a student record from the system."""
-        student_id_str = input("Enter the ID of the student to delete: ")
-        try:
-            student_id = int(student_id_str)
-        except ValueError:
-            print("Invalid student ID. Please enter a number.")
+    
+    def update_student_info(self, student_id, field, new_value):
+        valid_fields = ['name', 'contact', 'dob', 'school', 'region', 'income', 'dependents', 'aid_status']
+        if field not in valid_fields:
+            print("❌ Invalid field name.")
             return
+        try:
+            query = f"UPDATE Students SET {field} = %s WHERE id = %s"
+            self.cursor.execute(query, (new_value, student_id))
+            self.connection.commit()
+            print("✅ Student info updated successfully.")
+        except mysql.connector.Error as e:
+            print(f"❌ Error updating student info: {e}")
 
-        print(f"\n--- Delete Student (ID: {student_id}) ---")
-        confirm = input(f"Are you sure you want to delete student ID {student_id} and all associated aid allocations? (yes/no): ").lower()
-        if confirm == 'yes':
-            query = "DELETE FROM Students WHERE student_id = ?"
-            if self.db.execute_query(query, (student_id,)):
-                if self.db.cursor.rowcount > 0: # Check if a row was actually deleted
-                    print(f"Student ID {student_id} and associated aid allocations deleted successfully.")
-                else:
-                    print(f"No student found with ID: {student_id}")
-            else:
-                print(f"Failed to delete student ID {student_id}.")
-        else:
-            print("Student deletion cancelled.")
+    
+    def delete_student(self, student_id):
+        try:
+            self.cursor.execute("DELETE FROM Students WHERE id = %s", (student_id,))
+            self.connection.commit()
+            print(f"🗑️ Student with ID {student_id} deleted successfully.")
+        except mysql.connector.Error as e:
+            print(f"❌ Error deleting student: {e}")
+
+def prompt_and_add_student(student_mgr):
+    print("📝 Let's create a new student profile...")
+    name = input("Full Name: ")
+    contact = input("Contact Number: ")
+    dob = input("Date of Birth (YYYY-MM-DD): ")
+
+    try:
+        income = float(input("💰 Average Monthly Income (RWF): "))
+        dependents = int(input(" Number of Dependents(Meaning number of people depending on that income): "))
+    except ValueError:
+        print("❌ Invalid number format. Please try again.")
+        return
+
+    region = input("Region: ")
+    school = input("School: ")
+
+    student = Student(
+        id=None,
+        name=name,
+        contact=contact,
+        dob=dob,
+        income=income,
+        dependents=dependents,
+        region=region,
+        school=school
+    )
