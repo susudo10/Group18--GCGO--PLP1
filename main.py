@@ -23,7 +23,7 @@ def main():
         main_choice = menu.get_user_choice()
         clear_screen()
 
-        if main_choice == '8':
+        if main_choice == '1':
             while True:
                 menu.display_student_menu()
                 student_choice = menu.get_user_choice()
