@@ -19,6 +19,14 @@ class Menu:
         print("5. Back to Main Menu")
         print("--------------------------")
 
+    def display_subchoice(self):
+        """Sub-menu for student-related tasks."""
+        print("\n--- View Students ---")
+        print("1. View All Students")
+        print("2. Filter Students")
+        print("3. Back to Student Menu")
+        
+
     def display_aid_menu(self):
         """Sub-menu for aid program management."""
         print("\n--- Financial Aid Program Management ---")

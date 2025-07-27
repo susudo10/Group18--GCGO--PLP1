@@ -1,23 +1,18 @@
 #!/usr/bin/python3
 """
-This module defines a StudentManager class with properties and methods
-to add, view, update and delete students.
-It is basically the controller that manages the collection student objects and links to the database.
+Manages student records with database operations and user prompts.
 """
 
-# First importing the sql database and the class student.
 import mysql.connector
-from student import Student # Assuming student class is in student.py
+from student import Student  # Assuming you have a Student class in student.py
 import os
 from dotenv import load_dotenv
 
-load_dotenv() #Loading the .env variables into the script
+load_dotenv()
 
 
 class StudentManager:
-    """ Defines the class StudentManager."""
-    def __init__(self):
-        """ This connects to the aiven databse."""
+    def __init__(self, db):
         self.connection = mysql.connector.connect(
             host=os.getenv("DB_HOST"),
             user=os.getenv("DB_USER"),
@@ -27,168 +22,147 @@ class StudentManager:
         )
         self.cursor = self.connection.cursor()
 
-
-    # Method to add a student
     def add_student(self, student: Student):
-        print("Connected to DB from student_manager: ", self.connection.database)
-        # Debug print before the SQL query
-        print("Inserting student with values: ")
-        print("Name:", student.name)
-        print("Contact:", student.contact)
-        print("DOB:", student.dob)
-        print("Income:", student.income)
-        print("Dependents:", student.dependents)
-        print("Region:", student.region)
-        print("School:", student.school)
-
-        """Adds a new student to the database."""
-        self.cursor.execute(
-            """
-            INSERT INTO Students (name, contact, dob, income, dependents, region, school) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """,
-            (
-                student.name,
-                student.contact,
-                student.dob,
-                student.income,
-                student.dependents,
-                student.region,
-                student.school              
+        try:
+            self.cursor.execute(
+                """
+                INSERT INTO Students (name, contact, dob, income, dependents, region, school) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                """,
+                (
+                    student.name,
+                    student.contact,
+                    student.dob,
+                    student.income,
+                    student.dependents,
+                    student.region,
+                    student.school
+                )
             )
-        )
-        self.connection.commit()
-        print(f"Student '{student.name}' added successfully.✅")
+            self.connection.commit()
+            print(f"\n✅ Student '{student.name}' added successfully.✅")
 
-    # Method to view specific student details by ID
+        except mysql.connector.Error as e:
+            print(f"❌ Error adding student: {e}")
+    
     def view_student_details(self, student_id):
         try:
-            self.cursor.execute("SELECT * FROM Students WHERE id = %s", (student_id,)) # Comma!
+            self.cursor.execute("SELECT id, name, contact, dob, income, dependents, region, school, aid_status FROM Students WHERE id = %s", (student_id,))
             student = self.cursor.fetchone()
-            if student:
-                print("\n--- Student Details ---")
-                print(student)
-            else:
-                print(f"No student found with ID {student_id}😔.")
-        except mysql.connector.Error as e:
-            print(f"Error retrieving student: {e}")
 
-    # Method to filter a student
-    def filter_students(self, filter_by_region=None, filter_by_status=None):
-        query3 = "SELECT * FROM Students"
-        conditions = []
-        values = []
-
-        if filter_by_region:
-            conditions.append("region = %s")
-            values.append(filter_by_region)
-
-        if filter_by_status:
-            conditions.append("aid_status = %s")
-            values.append(filter_by_status)
-
-        if conditions:
-            query3 += " WHERE " + " AND ".join(conditions)
-
-        self.cursor.execute(query3, values)
-        results = self.cursor.fetchall()
-
-        for row in results:
-            print(row)
-
-    # Method to Update Student Information
-    def update_student_info(self, student_id, field, new_value):
-        try:
-            if field not in ['name', 'contact', 'dob', 'school', 'region', 'income', 'dependents', 'aid_status']:
-                print("Invalid field name.")
+            if not student:
+                print(f"No student found with ID {student_id}.")
                 return
+
+            print("\n--- Student Profile ---")
+            print("-" * 40)
+            print(f"{'ID':<15}: {student[0]}")
+            print(f"{'Full Name':<15}: {student[1]}")
+            print(f"{'Contact':<15}: {student[2]}")
+            print(f"{'Date of Birth':<15}: {student[3]}")
+            print(f"{'Income (RWF)':<15}: {student[4]:,.2f}")
+            print(f"{'Dependents':<15}: {student[5]}")
+            print(f"{'Region':<15}: {student[6]}")
+            print(f"{'School':<15}: {student[7]}")
+            print(f"{'Aid Status':<15}: {student[8] or 'N/A'}")
+            print("-" * 40)
+
+        except mysql.connector.Error as e:
+            print(f"Error retrieving student details: {e}")
+
+    def filter_students(self, region=None, aid_status=None):
+        query = "SELECT * FROM Students WHERE 1=1"
+        params = []
+        if region:
+            query += " AND region = %s"
+            params.append(region)
+        if aid_status:
+            query += " AND aid_status = %s"
+            params.append(aid_status)
+
+        self.cursor.execute(query, params)
+        results = self.cursor.fetchall()
+        if not results:
+            print("No students found matching the criteria.")
+            return
+        
+        headers = [desc[0] for desc in self.cursor.description]
+        print(" | ".join(f"{h:<15}" for h in headers))
+        print("-" * (len(headers)*18))
+        for row in results:
+            print(" | ".join(f"{str(field):<15}" for field in row))
+
+
+    def list_all_students(self):
+        self.cursor.execute("SELECT * FROM Students")
+        students = self.cursor.fetchall()
+        if not students:
+            print("No student records found.")
+            return
+    
+        # Print header row 
+        print(f"{'ID':<4} {'Name':<20} {'Contact':<12} {'DOB':<12} {'Income':<10} {'Deps':<5} {'Region':<10} {'School':<15} {'Aid Status':<10}")
+        print("-" * 110)
+    
+        for student in students:
+            income_val = student[4]
+            try:
+                income_val = f"{float(income_val):.2f}"
+            except (TypeError, ValueError):
+                income_val = str(income_val) if income_val is not None else "N/A"
+        
+            print(f"{student[0]:<4} {student[1]:<20} {student[2]:<12} {str(student[3]):<12} {income_val:<10} "
+              f"{student[5]:<5} {student[6]:<10} {student[7]:<15} {student[8] or 'N/A':<10}")
+
+
+    
+    def update_student_info(self, student_id, field, new_value):
+        valid_fields = ['name', 'contact', 'dob', 'school', 'region', 'income', 'dependents', 'aid_status']
+        if field not in valid_fields:
+            print("❌ Invalid field name.")
+            return
+        try:
             query = f"UPDATE Students SET {field} = %s WHERE id = %s"
             self.cursor.execute(query, (new_value, student_id))
             self.connection.commit()
             print("✅ Student info updated successfully.")
         except mysql.connector.Error as e:
-            print(f"Error updating student info: {e}")
-    # Method to update the student profile details
-    def update_student(self, student_id, updates : dict):
-        """
-        This defines the property to update student details in updates dict.
-        
-        Args:
-        student_id(INT): The ID of the student to update.
-        updates (dict): A dictionary of field names and their new values.
-                        e.g, {'name': 'Jane Doe', 'income': 30000}
-        """
-        if not updates:
-            print("No updates provided.")
-            return 
-        
-        # Creating a SET clause which is dynamic through Looking over dictionary of fields which can be updated
-        set_clause = ", ".join([f"{field} = %s" for field in updates.keys()])
-        values = list(updates.values())
-        values.append(student_id)
+            print(f"❌ Error updating student info: {e}")
 
-
-        #Join the update strings into one SQL statement
-        query1 = f"UPDATE Students SET {set_clause} WHERE id = %s"
-
-        # Executing the query and committing the updates
-        try:
-            self.cursor.excute(query1, values)
-            self.connection.commit()
-            print(f"Student {student_id} updated successfully.")
-        except Exception as e:
-            print(f"Error updating student: {e}")
-
-    # Method to list all students
-    def list_all_students(self):
-        try:
-            self.cursor.execute("SELECT * FROM Students")
-            students = self.cursor.fetchall()
-            if students:
-                print("\n--- All Students ---")
-                for student in students:
-                    print(student)
-            else:
-                print("No student records found.")
-        except mysql.connector.Error as e:
-            print(f"Error retrieving students: {e}")
-
-    # Method to delete the student record
+    
     def delete_student(self, student_id):
-        query2 = "DELETE FROM Students WHERE id = %s"
-        self.cursor.execute(query2, (student_id,))
-        self.connection.commit()
-        print("Student deleted successfully.")
+        try:
+            self.cursor.execute("DELETE FROM Students WHERE id = %s", (student_id,))
+            self.connection.commit()
+            print(f"🗑️ Student with ID {student_id} deleted successfully.")
+        except mysql.connector.Error as e:
+            print(f"❌ Error deleting student: {e}")
 
-def prompt_and_add_student():
-    print("Welcome, we are creating a profile for you...")
-    name = input("Please may you enter your full name: ")
-    contact = input("Enter your contact number: ")
-    dob = input("Enter your date of birth (YYYY-MM-DD): ")
-    income = float(input("Please you enter the average income in your household monthly (RWF) ending with .00: "))
-    dependents = int(input("Enter number of dependents in your household "
-    "(don't worry it means the number of people who depend on that income): "))
-    region = input("Enter your region: ")
-    school = input("Enter your school: ")
-    manager = StudentManager()
+def prompt_and_add_student(student_mgr):
+    print("📝 Let's create a new student profile...")
+    name = input("Full Name: ")
+    contact = input("Contact Number: ")
+    dob = input("Date of Birth (YYYY-MM-DD): ")
 
-    student = Student(None, name, contact, dob, income, dependents, region, school)
+    try:
+        income = float(input("💰 Average Monthly Income (RWF): "))
+        dependents = int(input(" Number of Dependents(Meaning number of people depending on that income): "))
+    except ValueError:
+        print("❌ Invalid number format. Please try again.")
+        return
 
-    manager.add_student(student)
+    region = input("Region: ")
+    school = input("School: ")
 
-if __name__ == "__main__":
-    manager = StudentManager()
+    student = Student(
+        id=None,
+        name=name,
+        contact=contact,
+        dob=dob,
+        income=income,
+        dependents=dependents,
+        region=region,
+        school=school
+    )
 
-    # List all students
-    print("\n🔍 Testing: List All Students")
-    manager.list_all_students()
-
-    # View one student by ID
-    # print("\n🔍 Testing: View Student Details")
-    # manager.view_student_details(1)  # Use a valid ID from your DB
-
-    # # Update student info
-    # print("\n✏️ Testing: Update Student Info")
-    # manager.update_student_info(1, "contact", "0788888888")  # Use a valid ID and field
-
-prompt_and_add_student()
+    student_mgr.add_student(student)
