@@ -99,7 +99,7 @@ def allocate_aid():
     create_allocations_table()
     sql = ''' INSERT INTO allocations(student_id, program_id, amount, status)
               VALUES(%s, %s, %s, %s) '''
-    cursor.execute(sql, (student_id, program_id, amount, 'Pending'))
+    cursor.execute(sql, (student_id, program_id, amount, 'Successful'))
     
     # Update available amount
     new_available = int(program[4]) - int(amount)

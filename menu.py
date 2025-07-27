@@ -49,7 +49,7 @@ class Menu:
         """Sub-menu for reporting and analytics tasks."""
         print("\n--- Reporting and Analytics ---")
         print("1. Generate Aid Report")
-        print("2. Generate Needy Student List")
+        # print("2. Generate Needy Student List")
         print("3. Back to Main Menu")
         print("-------------------------------")
 
