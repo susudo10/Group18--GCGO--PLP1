@@ -10,7 +10,7 @@ import mysql.connector
 from student import Student # Assuming student class is in student.py
 import os
 from dotenv import load_dotenv
-from db_connection import create_connection, create_tables
+from db_connection import create_connection
 
 load_dotenv() #Loading the .env variables into the script
 

@@ -7,14 +7,15 @@ from reports import ReportManager
 from menu import Menu
 from user_exp import clear_screen
 
-def main():
-    db = Database()
-    student_mgr = StudentManager(db)
-    aid_mgr = AidManager(db)
-    allocation_mgr = AllocationManager(db)
-    report_mgr = ReportManager(db)
-    menu = Menu()
+db = Database()
+student_mgr = StudentManager(db)
+aid_mgr = AidManager(db)
+allocation_mgr = AllocationManager(db)
+report_mgr = ReportManager(db)
+menu = Menu()
 
+
+def main():
     clear_screen()
 
     while True:
@@ -22,13 +23,13 @@ def main():
         main_choice = menu.get_user_choice()
         clear_screen()
 
-        if main_choice == '1':
+        if main_choice == '8':
             while True:
                 menu.display_student_menu()
                 student_choice = menu.get_user_choice()
                 clear_screen()
                 if student_choice == '1':
-                    prompt_and_add_student()
+                    # prompt_and_add_student()
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif student_choice == '2':
