@@ -1,5 +1,6 @@
 from database import Database
-from student_manager import StudentManager
+from student_manager import *
+from db_connection import *
 from aid_manager import AidManager
 from allocation_manager import AllocationManager
 from reports import ReportManager
@@ -27,7 +28,7 @@ def main():
                 student_choice = menu.get_user_choice()
                 clear_screen()
                 if student_choice == '1':
-                    student_mgr.add_student()
+                    prompt_and_add_student()
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif student_choice == '2':

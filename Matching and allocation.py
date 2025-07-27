@@ -6,7 +6,6 @@ import time
 import sys
 import sqlite3
 from datetime import datetime
-from db_connection import create_connection
 
 DB_FILE = "san.db"
 
