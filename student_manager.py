@@ -101,7 +101,7 @@ class StudentManager:
             return
     
         # Print header row 
-        print(f"{'ID':<4} {'Name':<20} {'Contact':<12} {'DOB':<12} {'Income':<10} {'Deps':<5} {'Region':<10} {'School':<15} {'Aid Status':<10}")
+        print(f"{'ID':<4} {'Name':<20} {'Contact':<12} {'DOB':<12} {'School':<10} {'Region':<5} {'Income':<10} {'Dependents':<15} {'Aid Status':<10}")
         print("-" * 110)
     
         for student in students:

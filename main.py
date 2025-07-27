@@ -39,7 +39,7 @@ def main():
 
                     if sub_choice == '1':
                         student_mgr.list_all_students()
-                        print("These are all the students. Don't worry if your name isn't there")
+                        print("These are all the students we have for now. Don't worry if your name isn't there")
                         print("You may create a profile to solve that. We got you😉")
                         input("\nPress Enter to continue...")
                         clear_screen()
