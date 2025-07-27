@@ -20,6 +20,7 @@ def create_connection():
             print("Connection to the database was successful")
             print(f"Database name: {connection.database}")
             print(f"Server version: {connection.server_info}")
+            print(f"Connected to: ", connection.database)
             return connection
         else:
             print("Connection to the database failed")
@@ -35,7 +36,7 @@ def create_students_table():
         try:
             cursor = connection.cursor() 
             cursor.execute("""
-                CREATE TABLE IF NOT EXISTS students (
+                CREATE TABLE IF NOT EXISTS Students (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     name VARCHAR(100) NOT NULL,
                     contact VARCHAR(50),

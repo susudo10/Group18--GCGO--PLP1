@@ -8,16 +8,17 @@ contact, income_level, dependants, locality/region.
 class Student:
     """ Defines the class Student."""
 
-    def __init__(self, student_id, name, contact, dob, school, income, dependents, region):
+    def __init__(self, id, name, contact, dob, income, dependents, region, school):
         """Initialises a new Student instance."""
-        self.student_id = student_id
+        self.id = id
         self.name = name
         self.contact = contact
         self.dob = dob
-        self.school = school
         self.income = income
         self.dependents = dependents
         self.region = region
+        self.school = school
+
 
     @property
     def financial_status(self):
@@ -35,7 +36,7 @@ class Student:
         return self.income < 100000 or self.dependents >=3
 
     # Method to update to the student's attributes.
-    def update_info(self, name=None, contact=None, region=None, school=None, income=None, dependents=None):
+    def update_info(self, name=None, contact=None, dob=None, income=None, dependents=None, region=None, school=None):
         """
         Allows for updates to the student's attributes through using optional arguments allowing for updates on chosen fields only.
         """
@@ -43,22 +44,13 @@ class Student:
             self.name = name
         if contact is not None:
             self.contact = contact
-        if region is not None:
-            self.region = region
+        if dob is not None:
+            self.dob = dob
         if income is not None:
             self.income = income
         if dependents is not None:
             self.dependents = dependents
-
-def prompt_student_info():
-    name = input("Enter student name: ")
-    contact = input("Enter contact number: ")
-    dob = input("Enter date of birth (YYYY-MM-DD): ")
-    school = input("Enter the name of your school: ")
-    income = float(input("Enter income level: "))
-    dependents = int(input("Enter number of dependents: "))
-    region = input("Enter region: ")
-    school = input("Enter school name: ")
-
-    # student_id can be None or assigned later
-    return Student(None, name, contact, school, dob, income, dependents, region, school)
+        if region is not None:
+            self.region = region
+        if school is not None:
+            self.school = school
