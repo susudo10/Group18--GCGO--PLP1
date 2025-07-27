@@ -1,19 +1,21 @@
 from database import Database
-from student_manager import StudentManager
+from student_manager import *
+from db_connection import *
 from aid_manager import AidManager
 from allocation_manager import AllocationManager
 from reports import ReportManager
 from menu import Menu
 from user_exp import clear_screen
 
-def main():
-    db = Database()
-    student_mgr = StudentManager(db)
-    aid_mgr = AidManager(db)
-    allocation_mgr = AllocationManager(db)
-    report_mgr = ReportManager(db)
-    menu = Menu()
+db = Database()
+student_mgr = StudentManager(db)
+aid_mgr = AidManager(db)
+allocation_mgr = AllocationManager(db)
+report_mgr = ReportManager(db)
+menu = Menu()
 
+
+def main():
     clear_screen()
 
     while True:
@@ -27,21 +29,45 @@ def main():
                 student_choice = menu.get_user_choice()
                 clear_screen()
                 if student_choice == '1':
-                    student_mgr.add_student()
+                    prompt_and_add_student(student_mgr)
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif student_choice == '2':
-                    filter_loc = input("Filter by locality (leave empty for all): ")
-                    filter_status = input("Filter by status (e.g., 'needy', leave empty for all): ")
-                    student_mgr.view_students(filter_loc if filter_loc else None, filter_status if filter_status else None)
+                    menu.display_subchoice()
+                    sub_choice = input("Enter your choice: ").strip()
+                    clear_screen()
+
+                    if sub_choice == '1':
+                        student_mgr.list_all_students()
+                        input("\nPress Enter to continue...")
+                        clear_screen()
+                    elif sub_choice == '2':
+                        filter_loc = input("Filter by locality (leave empty for all): ").strip()
+                        filter_status = input("Filter by status (e.g., 'needy', leave empty for all): ").strip()
+                        student_mgr.filter_students(filter_loc if filter_loc else None, filter_status if filter_status else None)
+                        input("\nPress Enter to continue...")
+                        clear_screen()
+                    elif sub_choice == '3':
+                        break
+                    else:
+                        print("Invalid choice. Please try again.")
+                        input("\nPress Enter to continue...")
+                        clear_screen()
+                        filter_loc = input("Filter by locality (leave empty for all): ")
+                        filter_status = input("Filter by status (e.g., 'needy', leave empty for all): ")
+                        student_mgr.filter_students(filter_loc if filter_loc else None, filter_status if filter_status else None)
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif student_choice == '3':
-                    student_mgr.update_student_profile()
+                    student_id = input("Enter the student ID to update: ")
+                    field = input("Enter the field to update (name, contact, dob, school, region, income, dependents, aid_status): ")
+                    new_value = input("Enter the new value: ")
+                    student_mgr.update_student_info(student_id, field, new_value)
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif student_choice == '4':
-                    student_mgr.delete_student()
+                    student_id = input("Enter the student ID to delete: ")
+                    student_mgr.delete_student(student_id)
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif student_choice == '5':
