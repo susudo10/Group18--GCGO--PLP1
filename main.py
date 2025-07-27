@@ -4,6 +4,8 @@ from db_connection import *
 from aid_manager import AidManager
 from allocation_manager import match_students_to_aid, allocate_aid
 from reports import generate_aid_report
+from allocate_by_priority import allocate_by_priority
+
 
 from menu import Menu
 from user_exp import clear_screen
@@ -121,6 +123,10 @@ def main():
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif allocation_choice == '3':
+                    allocate_by_priority()
+                    input("\nPress Enter to continue...")
+                    clear_screen()
+                elif allocation_choice == '4':
                     break
                 else:
                     print("Invalid choice. Please try again.")

@@ -8,7 +8,7 @@ contact, income_level, dependants, locality/region.
 class Student:
     """ Defines the class Student."""
 
-    def __init__(self, id, name, contact, dob, income, dependents, region, school):
+    def __init__(self, id, name, contact, dob, income, dependents, region, school, amount_needed, priority_index):
         """Initialises a new Student instance."""
         self.id = id
         self.name = name
@@ -18,6 +18,8 @@ class Student:
         self.dependents = dependents
         self.region = region
         self.school = school
+        self.amount_needed = amount_needed
+        self.priority_index = priority_index
 
 
     @property

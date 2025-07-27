@@ -27,8 +27,8 @@ class StudentManager:
         try:
             self.cursor.execute(
                 """
-                INSERT INTO Students (name, contact, dob, income, dependents, region, school) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO Students (name, contact, dob, income, dependents, region, school, amount_needed, priority_index) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
                 (
                     student.name,
@@ -37,7 +37,9 @@ class StudentManager:
                     student.income,
                     student.dependents,
                     student.region,
-                    student.school
+                    student.school,
+                    student.amount_needed,
+                    student.priority_index
                 )
             )
             self.connection.commit()
@@ -63,6 +65,7 @@ class StudentManager:
             print(f"{'Date of Birth':<15}: {student[3]}")
             print(f"{'Income (RWF)':<15}: {student[4]:,.2f}")
             print(f"{'Dependents':<15}: {student[5]}")
+            print(f"{'Amount needed':<15}: {student[5]}")
             print(f"{'Region':<15}: {student[6]}")
             print(f"{'School':<15}: {student[7]}")
             print(f"{'Aid Status':<15}: {student[8] or 'N/A'}")
@@ -146,8 +149,10 @@ def prompt_and_add_student(student_mgr):
     dob = input("Date of Birth (YYYY-MM-DD): ")
 
     try:
-        income = float(input("💰 Average Monthly Income (RWF): "))
+        income = int(input("💰 Average Monthly Income (RWF): "))
         dependents = int(input(" Number of Dependents(Meaning number of people depending on that income): "))
+        amount_needed = int(input("Enter Amount needed): "))
+        pr_index = calculate_priority(income, dependents, amount_needed)
     except ValueError:
         print("❌ Invalid number format. Please try again.")
         return
@@ -163,7 +168,19 @@ def prompt_and_add_student(student_mgr):
         income=income,
         dependents=dependents,
         region=region,
-        school=school
+        school=school,
+        amount_needed=amount_needed,
+        priority_index=pr_index
     )
 
     student_mgr.add_student(student)
+
+def calculate_priority(income, dependents, amount_needed, w1=0.5, w2=0.3, w3=0.2):
+    # Normalize to 0-10 scale (you can adjust max values based on your data)
+    income_score = (50000 - income) / 50000 * 10  # Lower income = higher score
+    dependents_score = dependents / 8 * 10        # More dependents = higher score  
+    amount_score = amount_needed / 5000 * 10      # Higher amount = higher score
+    
+    # Calculate weighted priority index
+    priority = income_score * w1 + dependents_score * w2 + amount_score * w3
+    return round(priority, 2)

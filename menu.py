@@ -42,7 +42,8 @@ class Menu:
         print("\n--- Matching and Allocation ---")
         print("1. Match Students to Aid / Find Eligible Students")
         print("2. Allocate Aid")
-        print("3. Back to Main Menu")
+        print("3. Allocate By Priority")
+        print("4. Back to Main Menu")
         print("------------------------------")
 
     def display_report_menu(self):
