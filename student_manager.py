@@ -105,7 +105,7 @@ class StudentManager:
             return
     
         # Print header row 
-        print(f"{'ID':<4} {'Name':<20} {'Contact':<12} {'DOB':<12} {'Income':<10} {'Deps':<5} {'Region':<10} {'School':<15} {'Aid Status':<10}")
+        print(f"{'ID':<4} {'Name':<20} {'Contact':<12} {'DOB':<12} {'School':<10} {'Region':<5} {'Income':<10} {'Dependents':<15} {'Priority Index':<10}")
         print("-" * 110)
     
         for student in students:
@@ -116,12 +116,12 @@ class StudentManager:
                 income_val = str(income_val) if income_val is not None else "N/A"
         
             print(f"{student[0]:<4} {student[1]:<20} {student[2]:<12} {str(student[3]):<12} {income_val:<10} "
-              f"{student[5]:<5} {student[6]:<10} {student[7]:<15} {student[8] or 'N/A':<10}")
+              f"{student[5]:<5} {student[6]:<10} {student[7]:<15} {student[10] or 'N/A':<10}")
 
 
     
     def update_student_info(self, student_id, field, new_value):
-        valid_fields = ['name', 'contact', 'dob', 'school', 'region', 'income', 'dependents', 'aid_status']
+        valid_fields = ['name', 'contact', 'dob', 'school', 'region', 'income', 'dependents', 'priority_index']
         if field not in valid_fields:
             print("❌ Invalid field name.")
             return

@@ -70,9 +70,9 @@ def allocate_by_priority():
     # Allocation options
     print("\nAllocation options:")
     print("1. Allocate to highest priority student")
-    print("2. Allocate to top N students")
-    print("3. Allocate specific amount to a student")
-    print("4. Auto-allocate to fill as many students as possible")
+    # print("2. Allocate to top N students")
+    # print("3. Allocate specific amount to a student")
+    # print("4. Auto-allocate to fill as many students as possible")
     
     choice = input("Choose option (1-4): ")
     

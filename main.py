@@ -86,7 +86,7 @@ def main():
                 aid_choice = menu.get_user_choice()
                 clear_screen()
                 if aid_choice == '1':
-                    aid_mgr.add_aid_program()
+                    aid_mgr.new_aid()
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif aid_choice == '2':
@@ -114,19 +114,19 @@ def main():
                 menu.display_allocation_menu()
                 allocation_choice = menu.get_user_choice()
                 clear_screen()
+                # if allocation_choice == '1':
+                #     match_students_to_aid()
+                #     input("\nPress Enter to continue...")
+                #     clear_screen()
                 if allocation_choice == '1':
-                    match_students_to_aid()
-                    input("\nPress Enter to continue...")
-                    clear_screen()
-                elif allocation_choice == '2':
                     allocate_aid()
                     input("\nPress Enter to continue...")
                     clear_screen()
-                elif allocation_choice == '3':
+                elif allocation_choice == '2':
                     allocate_by_priority()
                     input("\nPress Enter to continue...")
                     clear_screen()
-                elif allocation_choice == '4':
+                elif allocation_choice == '3':
                     break
                 else:
                     print("Invalid choice. Please try again.")
