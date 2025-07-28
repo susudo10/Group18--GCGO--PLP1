@@ -44,6 +44,7 @@ class StudentManager:
             )
             self.connection.commit()
             print(f"\n✅ Student '{student.name}' added successfully.✅")
+            print("You may choose the view students option to see your details")
 
         except mysql.connector.Error as e:
             print(f"❌ Error adding student: {e}")

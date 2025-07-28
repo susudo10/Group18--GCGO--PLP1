@@ -42,6 +42,8 @@ def main():
 
                     if sub_choice == '1':
                         student_mgr.list_all_students()
+                        print("These are the students that we have for now.")
+                        print("Don't worry if your name is not there. You may create a profile😉")
                         input("\nPress Enter to continue...")
                         clear_screen()
                     elif sub_choice == '2':
