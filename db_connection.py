@@ -55,5 +55,10 @@ def create_students_table():
     else:
         print("⚠️ Failed to connect. Table not created.")
 
+<<<<<<< HEAD
 # Run it
 create_students_table()
+=======
+# Calling the function
+create_students_table
+>>>>>>> f4caeac (.env file created)
