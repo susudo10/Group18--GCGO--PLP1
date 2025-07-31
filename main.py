@@ -9,7 +9,6 @@ from allocate_by_priority import allocate_by_priority
 from menu import Menu
 from user_exp import clear_screen
 
-<<<<<<< HEAD
 db = Database()
 student_mgr = StudentManager(db)
 aid_mgr = AidManager(db)
@@ -18,14 +17,12 @@ aid_mgr = AidManager(db)
 menu = Menu()
 
 
-=======
->>>>>>> ae22e82ef153d0afc5c1cdb09812eb3079e31873
 def main():
     db = Database()
     student_mgr = StudentManager(db)
     aid_mgr = AidManager(db)
-    allocation_mgr = AllocationManager(db)
-    report_mgr = ReportManager(db)
+    # allocation_mgr = AllocationManager(db)
+    # report_mgr = ReportManager(db)
     menu = Menu()
 
     clear_screen()
