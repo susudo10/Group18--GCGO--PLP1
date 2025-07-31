@@ -40,8 +40,9 @@ class Menu:
     def display_allocation_menu(self):
         """Sub-menu for matching and allocation tasks."""
         print("\n--- Matching and Allocation ---")
-        print("1. Match Students to Aid / Find Eligible Students")
-        print("2. Allocate Aid")
+        # print("1. Match Students to Aid / Find Eligible Students")
+        print("1. Allocate Aid Manually")
+        print("2. Allocate By Priority")
         print("3. Back to Main Menu")
         print("------------------------------")
 
@@ -49,7 +50,7 @@ class Menu:
         """Sub-menu for reporting and analytics tasks."""
         print("\n--- Reporting and Analytics ---")
         print("1. Generate Aid Report")
-        print("2. Generate Needy Student List")
+        # print("2. Generate Needy Student List")
         print("3. Back to Main Menu")
         print("-------------------------------")
 

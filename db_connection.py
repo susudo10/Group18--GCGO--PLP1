@@ -45,7 +45,9 @@ def create_students_table():
                     region VARCHAR(100),
                     income DECIMAL(10, 2),
                     dependents INT,
-                    aid_status VARCHAR(20) DEFAULT 'pending'
+                    aid_status VARCHAR(20) DEFAULT 'pending',
+                    amount_needed DECIMAL(10, 2),
+                    priority_index INT DEFAULT 0
                 );
             """)
             connection.commit()

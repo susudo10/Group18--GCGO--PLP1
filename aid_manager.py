@@ -1,8 +1,38 @@
 from database import Database
+from db_connect import connect_to_database
+import mysql.connector
+
+conn = connect_to_database()
 
 class AidManager:
     def __init__(self, db: Database):
         self.db = db
+        self.cursor = conn.cursor()
+    def new_aid(self):
+        name = input("Enter scholarship/program name: ")
+        aid_type = input("Enter type of aid (e.g., Scholarship, Grant, Loan): ")
+        eligibility_criteria = input("Enter eligibility criteria: ")
+        available_funds = float(input("Enter available funds: "))
+        target_localities = input("Enter target localities (comma-separated, e.g., Kigali,Gasabo): ")
+        try:
+            self.cursor.execute(
+                """
+                INSERT INTO AidPrograms (name, type, eligibility_criteria, available_funds, target_locality) 
+                VALUES (%s, %s, %s, %s, %s)
+                """,
+                (
+                    name,
+                    aid_type,
+                    eligibility_criteria,
+                    available_funds,
+                    target_localities,
+                )
+            )
+            conn.commit()
+            print(f"\n✅ Program Aid '{name}' added successfully.✅")
+
+        except mysql.connector.Error as e:
+            print(f"❌ Error adding student: {e}")
 
     def add_aid_program(self):
         print("\n--- Add New Aid Program ---")
@@ -18,7 +48,7 @@ class AidManager:
         target_localities = input("Enter target localities (comma-separated, e.g., Kigali,Gasabo): ")
 
         query = "INSERT INTO AidPrograms (name, type, eligibility_criteria, available_funds, target_localities) VALUES (?, ?, ?, ?, ?)"
-        if self.db.execute_query(query, (name, aid_type, eligibility_criteria, available_funds, target_localities)):
+        if self.cursor.execute(query, (name, aid_type, eligibility_criteria, available_funds, target_localities)):
             print(f"Aid program '{name}' added successfully.")
         else:
             print(f"Failed to add aid program '{name}'.")

@@ -3,7 +3,10 @@ from student_manager import *
 from db_connection import *
 from aid_manager import AidManager
 from allocation_manager import match_students_to_aid, allocate_aid
-from reports import ReportManager
+from reports import generate_aid_report
+from allocate_by_priority import allocate_by_priority
+
+
 from menu import Menu
 from user_exp import clear_screen
 
@@ -11,7 +14,7 @@ db = Database()
 student_mgr = StudentManager(db)
 aid_mgr = AidManager(db)
 # allocation_mgr = AllocationManager(db)
-report_mgr = ReportManager(db)
+# report_mgr = ReportManager()
 menu = Menu()
 
 
@@ -83,7 +86,7 @@ def main():
                 aid_choice = menu.get_user_choice()
                 clear_screen()
                 if aid_choice == '1':
-                    aid_mgr.add_aid_program()
+                    aid_mgr.new_aid()
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif aid_choice == '2':
@@ -111,12 +114,16 @@ def main():
                 menu.display_allocation_menu()
                 allocation_choice = menu.get_user_choice()
                 clear_screen()
+                # if allocation_choice == '1':
+                #     match_students_to_aid()
+                #     input("\nPress Enter to continue...")
+                #     clear_screen()
                 if allocation_choice == '1':
-                    match_students_to_aid()
+                    allocate_aid()
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif allocation_choice == '2':
-                    allocate_aid()
+                    allocate_by_priority()
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif allocation_choice == '3':
@@ -133,12 +140,12 @@ def main():
                 clear_screen()
                 if report_choice == '1':
                     report_loc = input("Generate report for locality (leave empty for all): ")
-                    report_mgr.generate_aid_report(report_loc if report_loc else None)
+                    generate_aid_report()
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif report_choice == '2':
                     report_loc = input("Generate needy student list for locality (leave empty for all): ")
-                    report_mgr.generate_needy_student_list(report_loc if report_loc else None)
+                    # report_mgr.generate_needy_student_list(report_loc if report_loc else None)
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif report_choice == '3':
