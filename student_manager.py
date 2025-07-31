@@ -8,7 +8,6 @@ from student import Student  # Assuming you have a Student class in student.py
 import os
 from dotenv import load_dotenv
 from db_connection import create_connection
-
 load_dotenv()
 
 
@@ -105,7 +104,11 @@ class StudentManager:
             return
     
         # Print header row 
+<<<<<<< HEAD
         print(f"{'ID':<4} {'Name':<20} {'Contact':<12} {'DOB':<12} {'School':<10} {'Region':<5} {'Income':<10} {'Dependents':<15} {'Priority Index':<10}")
+=======
+        print(f"{'ID':<4} {'Name':<20} {'Contact':<12} {'DOB':<12} {'School':<10} {'Region':<5} {'Income':<10} {'Dependents':<15} {'Aid Status':<10}")
+>>>>>>> ae22e82ef153d0afc5c1cdb09812eb3079e31873
         print("-" * 110)
     
         for student in students:
@@ -172,6 +175,7 @@ def prompt_and_add_student(student_mgr):
         amount_needed=amount_needed,
         priority_index=pr_index
     )
+<<<<<<< HEAD
 
     student_mgr.add_student(student)
 
@@ -184,3 +188,5 @@ def calculate_priority(income, dependents, amount_needed, w1=0.5, w2=0.3, w3=0.2
     # Calculate weighted priority index
     priority = income_score * w1 + dependents_score * w2 + amount_score * w3
     return round(priority, 2)
+=======
+>>>>>>> ae22e82ef153d0afc5c1cdb09812eb3079e31873

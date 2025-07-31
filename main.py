@@ -1,6 +1,5 @@
 from database import Database
 from student_manager import *
-from db_connection import *
 from aid_manager import AidManager
 from allocation_manager import match_students_to_aid, allocate_aid
 from reports import generate_aid_report
@@ -10,6 +9,7 @@ from allocate_by_priority import allocate_by_priority
 from menu import Menu
 from user_exp import clear_screen
 
+<<<<<<< HEAD
 db = Database()
 student_mgr = StudentManager(db)
 aid_mgr = AidManager(db)
@@ -18,7 +18,16 @@ aid_mgr = AidManager(db)
 menu = Menu()
 
 
+=======
+>>>>>>> ae22e82ef153d0afc5c1cdb09812eb3079e31873
 def main():
+    db = Database()
+    student_mgr = StudentManager(db)
+    aid_mgr = AidManager(db)
+    allocation_mgr = AllocationManager(db)
+    report_mgr = ReportManager(db)
+    menu = Menu()
+
     clear_screen()
 
     while True:
@@ -33,6 +42,8 @@ def main():
                 clear_screen()
                 if student_choice == '1':
                     prompt_and_add_student(student_mgr)
+                    print("Student has been added successfully✅🎉")
+                    print("You may choose the option view students to view your details")
                     input("\nPress Enter to continue...")
                     clear_screen()
                 elif student_choice == '2':
@@ -42,6 +53,8 @@ def main():
 
                     if sub_choice == '1':
                         student_mgr.list_all_students()
+                        print("These are all the students we have for now. Don't worry if your name isn't there")
+                        print("You may create a profile to solve that. We got you😉")
                         input("\nPress Enter to continue...")
                         clear_screen()
                     elif sub_choice == '2':
@@ -156,6 +169,8 @@ def main():
                     clear_screen()
 
         elif main_choice == '5':
+            print("Thank you for exploring SAN. We hope it was very helpful for you.")
+            print("Connecting OPPORTUNITY to those who need it most😊🫡")
             print("Exiting Financial Aid Management System. Goodbye!")
             db.close_connection()
             break
