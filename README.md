@@ -1,3 +1,20 @@
+HOW TO RUN THESE PROJECT:
+
+1. clone or fork the project
+
+2. switch to main branch
+
+3. Activate your virtual environment by running python -m venv [any name]
+
+4. run pip install -r requirements.txt
+
+5. create and .env file and create the variable that are DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT. you can use database of your choice. in my case am using Aiven
+
+6. open the application and run main.py to interact with the application
+
+
+FEATURES PRESENT IN THESE PROJECT
+
 Financial Aid Management System
 This program is a comprehensive system designed to manage student information, financial aid programs, and the allocation of aid. It features a command-line interface for easy interaction and uses an SQLite database for persistent data storage.
 
@@ -55,7 +72,3 @@ display_report_menu(): Sub-menu for reporting and analytics tasks.
 
 get_user_choice(): Handles user input for menu selections.
 
-How to Run
-To get the Financial Aid Management System up and running:
-
-Save all files: Ensure all the .py files are saved then run main.py script
